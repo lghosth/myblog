@@ -71,6 +71,24 @@
     "related": {
       "noContent": "No related posts"
     },
+    "calendar": {
+      "title": "Calendar",
+      "subtitle": "Three-column preview",
+      "placeholder": "More sidebar widgets are on the way"
+    },
+    "moments": {
+      "title": "Recent Moments",
+      "subtitle": "Fresh updates"
+    },
+    "randomPosts": {
+      "title": "Random Posts",
+      "subtitle": "Something different"
+    },
+    "extra": {
+      "title": "Right Rail",
+      "subtitle": "Additional widgets",
+      "empty": "No right sidebar content is enabled right now"
+    },
     "panels": {
       "contents": "Contents",
       "related": "Related",

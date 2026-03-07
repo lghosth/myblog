@@ -71,6 +71,24 @@
     "related": {
       "noContent": "暂无相关文章"
     },
+    "calendar": {
+      "title": "日历",
+      "subtitle": "三栏布局预览",
+      "placeholder": "更多侧栏内容正在路上"
+    },
+    "moments": {
+      "title": "最近动态",
+      "subtitle": "说说更新"
+    },
+    "randomPosts": {
+      "title": "随机文章",
+      "subtitle": "换个口味"
+    },
+    "extra": {
+      "title": "右栏",
+      "subtitle": "附加内容区",
+      "empty": "当前未启用任何右栏内容"
+    },
     "panels": {
       "contents": "目录",
       "related": "相关",

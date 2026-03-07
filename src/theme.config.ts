@@ -159,6 +159,14 @@ export default defineConfig({
       customTitle: "",
     },
   },
+  layout: {
+    mode: "three-column",
+    rightSidebar: {
+      calendar: true,
+      recentMoments: true,
+      randomPosts: true,
+    },
+  },
   friends: {
     title: "友链",
     description: "卡片式展示，支持站点预览与主题色点缀。",

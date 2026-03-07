@@ -61,7 +61,8 @@
 
   let activePanel: PanelType = $state("overview");
   let sidebarElement: HTMLElement | null = $state(null);
-  let isAffix = $state(true);
+  let innerElement: HTMLElement | null = $state(null);
+  let isAffix = $state(false);
 
   // 合并静态 TOC 和加密文章解密后的 TOC
   let decryptedToc = $state<TocItem[]>([]);
@@ -123,6 +124,19 @@
         activePanel = "contents";
       }
     }
+  });
+
+  $effect(() => {
+    activePanel;
+    panels.length;
+
+    if (!sidebarElement || !innerElement) {
+      return;
+    }
+
+    sidebarElement.style.minHeight = isAffix
+      ? `${innerElement.offsetHeight}px`
+      : "";
   });
 
   onMount(() => {
@@ -188,7 +202,7 @@
   id="sidebar"
   class={`${$sidebarOpen ? "on" : ""} ${isAffix ? "affix" : ""}`.trim()}
 >
-  <div class="inner">
+  <div class="inner" bind:this={innerElement}>
     <SidebarTabs {panels} {activePanel} onSelect={selectPanel} />
 
     <!-- Panels Container -->
@@ -269,7 +283,7 @@
   /* Affix styles */
   #sidebar.affix > .inner {
     position: fixed;
-    width: 240px;
+    width: 15rem;
     top: 0;
   }
 
@@ -282,7 +296,7 @@
   #sidebar > .inner {
     margin-top: 3.5rem;
     position: relative;
-    width: 100%;
+    width: 15rem;
     color: var(--grey-6);
     text-align: center;
     display: flex;
@@ -309,6 +323,10 @@
   }
 
   @media (max-width: 1023px) {
+    #sidebar > .inner {
+      width: 100%;
+    }
+
     .panels > .inner {
       margin-top: 0;
     }

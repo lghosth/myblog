@@ -105,29 +105,10 @@ main {
   z-index: 1;
 }
 
-main > .inner {
-  width: calc(100% - 0.625rem);
-  align-items: flex-start;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-}
-
-@media (min-width: 1024px) {
-  main > .inner {
-    width: 72.5rem;
-  }
-}
-
-@media (min-width: 1440px) {
-  main > .inner {
-    width: 73%;
-  }
-}
-
 #main {
   background: linear-gradient(to top, var(--grey-0) 0, var(--grey-1) 20%) no-repeat top;
   box-shadow: 0 1.25rem 1rem 0.3125rem var(--body-bg-shadow);
+  min-width: 0;
   width: 100%;
   min-height: 37.5rem;
 }
@@ -139,12 +120,6 @@ main > .inner {
 
 #main .wrap:nth-child(1) {
   margin-bottom: 1.25rem;
-}
-
-@media (min-width: 1024px) {
-  #main {
-    width: calc(100% - 15.75rem);
-  }
 }
 
 @media (max-width: 1023px) {
@@ -160,21 +135,6 @@ main > .inner {
 @media (max-width: 500px) {
   #main .wrap {
     padding: 0.5rem;
-  }
-}
-
-#sidebar {
-  width: 15rem;
-  margin-right: 0.75rem;
-  order: -1;
-}
-
-@media (max-width: 1023px) {
-  #sidebar {
-    /* Remove display: none to allow sidebar to show on mobile */
-    /* Visibility is controlled by the Sidebar component's transform */
-    width: auto;
-    margin-right: 0;
   }
 }
 
