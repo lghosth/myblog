@@ -159,6 +159,18 @@ export default defineConfig({
       customTitle: "",
     },
   },
+  layout: {
+    mode: "two-column",
+    rightSidebar: {
+      order: ["announcement", "search", "calendar", "recentMoments", "randomPosts", "tagCloud"],
+      announcement: true,
+      search: true,
+      calendar: true,
+      recentMoments: true,
+      randomPosts: true,
+      tagCloud: true,
+    },
+  },
   friends: {
     title: "友链",
     description: "卡片式展示，支持站点预览与主题色点缀。",

@@ -71,6 +71,39 @@
     "related": {
       "noContent": "No related posts"
     },
+    "calendar": {
+      "title": "Calendar",
+      "subtitle": "Three-column preview",
+      "placeholder": "More sidebar widgets are on the way"
+    },
+    "search": {
+      "title": "Site Search",
+      "subtitle": "Find things fast",
+      "action": "Open search panel",
+      "helper": "Reuse the existing Pagefind search to jump to posts, tags, and keywords."
+    },
+    "moments": {
+      "title": "Recent Moments",
+      "subtitle": "Fresh updates"
+    },
+    "randomPosts": {
+      "title": "Random Posts",
+      "subtitle": "Something different"
+    },
+    "tagCloud": {
+      "title": "Tag Cloud",
+      "subtitle": "Popular topics",
+      "browseAll": "Browse all tags →"
+    },
+    "announcement": {
+      "title": "Announcement",
+      "subtitle": "Pinned notes"
+    },
+    "extra": {
+      "title": "Right Rail",
+      "subtitle": "Additional widgets",
+      "empty": "No right sidebar content is enabled right now"
+    },
     "panels": {
       "contents": "Contents",
       "related": "Related",

@@ -281,6 +281,73 @@ interface HomeConfig {
   };
 }
 
+interface LayoutConfig {
+  /**
+   * 页面布局模式。
+   * - "two-column"：默认双栏布局（左侧边栏 + 主内容）
+   * - "three-column"：在超宽屏下启用三栏布局，右侧增加一个附加内容栏
+   */
+  mode?: "two-column" | "three-column";
+
+  /**
+   * 右侧附加栏配置。
+   * - 当前可配置是否显示日历占位
+   * - 若全部关闭，则显示空状态占位文本
+   */
+  rightSidebar?: {
+    /**
+     * 右栏卡片显示顺序。
+     * - 支持的值："announcement" | "search" | "calendar" | "recentMoments" | "randomPosts" | "tagCloud"
+     * - 未填写的卡片会按默认顺序自动追加到末尾
+     */
+    order?: Array<
+      "announcement" | "search" | "calendar" | "recentMoments" | "randomPosts" | "tagCloud"
+    >;
+
+    /**
+     * 是否显示全站搜索卡片。
+     * - true：显示搜索入口卡片，并复用现有搜索浮层
+     * - false/未设置：隐藏
+     */
+    search?: boolean;
+
+    /**
+     * 是否显示日历卡片。
+     * - true/未设置：显示
+     * - false：隐藏
+     */
+    calendar?: boolean;
+
+    /**
+     * 是否显示最近动态（说说）。
+     * - true：显示最新 1 条动态
+     * - false/未设置：隐藏
+     */
+    recentMoments?: boolean;
+
+    /**
+     * 是否显示随机文章卡片。
+     * - true：显示随机文章列表
+     * - false/未设置：隐藏
+     */
+    randomPosts?: boolean;
+
+    /**
+     * 是否显示标签云卡片。
+     * - true：显示热门标签云
+     * - false/未设置：隐藏
+     */
+    tagCloud?: boolean;
+
+    /**
+     * 是否显示公告卡片。
+     * - true：显示站点公告内容
+     * - false/未设置：隐藏
+     */
+    announcement?: boolean;
+  };
+}
+
 export interface FriendLinkConfig {
   /** 站点地址 */
   url: string;
@@ -477,6 +544,12 @@ export interface ShokaXThemeConfig {
    * - 包含精选分类、分页设置等首页特定配置
    */
   home?: HomeConfig;
+
+  /**
+   * 布局配置。
+   * - 控制当前主题使用双栏或三栏布局
+   */
+  layout?: LayoutConfig;
 
   /**
    * 评论配置。
