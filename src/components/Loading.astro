@@ -99,7 +99,7 @@
   }
 
   .cat .head::before {
-    content: '';
+    content: "";
     width: 100%;
     height: 100%;
     position: absolute;
@@ -109,7 +109,7 @@
   }
 
   .cat .head::after {
-    content: '';
+    content: "";
     width: 4.125em;
     height: 2.5em;
     position: absolute;
@@ -117,7 +117,12 @@
     right: 3.9375em;
     background-image:
       linear-gradient(var(--grey-1) 65%, transparent 65%),
-      radial-gradient(var(--grey-1) 51%, rgb(56, 60, 75) 55%, rgb(56, 60, 75) 68%, transparent 70%);
+      radial-gradient(
+        var(--grey-1) 51%,
+        rgb(56, 60, 75) 55%,
+        rgb(56, 60, 75) 68%,
+        transparent 70%
+      );
     transform: rotate(-66deg);
   }
 
@@ -129,11 +134,33 @@
     position: absolute;
     transform: rotate(-47deg);
     background:
-      radial-gradient(circle, rgb(242, 192, 137) 0%, rgb(242, 192, 137) 23%, transparent 23%) -0.1875em 1.0625em
+      radial-gradient(
+          circle,
+          rgb(242, 192, 137) 0%,
+          rgb(242, 192, 137) 23%,
+          transparent 23%
+        ) -0.1875em
+        1.0625em no-repeat,
+      radial-gradient(
+          circle,
+          rgb(56, 60, 75) 0%,
+          rgb(56, 60, 75) 6%,
+          transparent 6%
+        )
+        0.75em -0.75em no-repeat,
+      radial-gradient(
+          circle,
+          rgb(56, 60, 75) 0%,
+          rgb(56, 60, 75) 6%,
+          transparent 6%
+        ) -0.75em -0.75em
         no-repeat,
-      radial-gradient(circle, rgb(56, 60, 75) 0%, rgb(56, 60, 75) 6%, transparent 6%) 0.75em -0.75em no-repeat,
-      radial-gradient(circle, rgb(56, 60, 75) 0%, rgb(56, 60, 75) 6%, transparent 6%) -0.75em -0.75em no-repeat,
-      radial-gradient(rgb(237, 166, 93) 0%, rgb(237, 166, 93) 15%, transparent 15%) 0 -0.6875em no-repeat,
+      radial-gradient(
+          rgb(237, 166, 93) 0%,
+          rgb(237, 166, 93) 15%,
+          transparent 15%
+        )
+        0 -0.6875em no-repeat,
       radial-gradient(
           circle,
           transparent 5%,
@@ -142,9 +169,16 @@
           transparent 10%
         ) -0.1875em -0.3125em
         no-repeat,
-      radial-gradient(circle, transparent 5%, rgb(56, 60, 75) 5%, rgb(56, 60, 75) 10%, transparent 10%)
+      radial-gradient(
+          circle,
+          transparent 5%,
+          rgb(56, 60, 75) 5%,
+          rgb(56, 60, 75) 10%,
+          transparent 10%
+        )
         0.1875em -0.3125em no-repeat,
-      radial-gradient(circle, rgb(237, 166, 93) 45%, transparent 45%) 0 -0.1875em,
+      radial-gradient(circle, rgb(237, 166, 93) 45%, transparent 45%)
+        0 -0.1875em,
       linear-gradient(
         transparent 35%,
         rgb(56, 60, 75) 35%,
@@ -162,7 +196,7 @@
   }
 
   .cat .foot::before {
-    content: '';
+    content: "";
     width: 100%;
     height: 100%;
     position: absolute;
@@ -172,7 +206,7 @@
   }
 
   .cat .foot::after {
-    content: '';
+    content: "";
     width: 0.9em;
     height: 2.5em;
     position: absolute;
@@ -366,21 +400,19 @@
 </style>
 
 <script>
-  const MINIMUM_LOADING_TIME = 1500
+  const MINIMUM_LOADING_TIME = 500;
 
   // TODO: 仅在第一次访问时显示加载动画
-  window.addEventListener('DOMContentLoaded',() => {
+  window.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const loading = document.getElementById('loading')
-        if (!loading) return
+        const loading = document.getElementById("loading");
+        if (!loading) return;
 
         setTimeout(() => {
-          loading.classList.add('hidden')
-        }, MINIMUM_LOADING_TIME)
-      })
-    })
-  })
+          loading.classList.add("hidden");
+        }, MINIMUM_LOADING_TIME);
+      });
+    });
+  });
 </script>
-
-

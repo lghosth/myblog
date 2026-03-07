@@ -12,7 +12,7 @@ export default defineConfig({
     },
     {
       text: "文章",
-      href: "/posts/",
+      href: "/random/",
       icon: "i-ri-quill-pen-fill",
       dropbox: {
         enable: true,

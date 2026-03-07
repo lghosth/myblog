@@ -20,19 +20,9 @@ import { visit } from "unist-util-visit";
 export default function noteDirective() {
   return (tree) => {
     visit(tree, (node) => {
-      if (
-        node.type === "containerDirective" ||
-        node.type === "leafDirective"
-      ) {
+      if (node.type === "containerDirective" || node.type === "leafDirective") {
         const type = node.name;
-        const validTypes = [
-          "info",
-          "warning",
-          "success",
-          "danger",
-          "primary",
-          "default",
-        ];
+        const validTypes = ["info", "warning", "success", "danger", "primary", "default"];
 
         if (!validTypes.includes(type)) return;
 

@@ -5,6 +5,7 @@
   import LeftNavBtn from "./LeftNavBtn.svelte";
   import MenuBar from "./MenuBar.svelte";
   import RightNavBar from "./RightNavBar.svelte";
+  import { t } from "@/i18n";
 
   interface Props {
     name: string;
@@ -68,6 +69,7 @@
   };
 
   const handleSearch = () => onSearch?.();
+  const randomPostLabel = t("random.title");
 </script>
 
 <nav
@@ -82,9 +84,19 @@
     <MenuBar {name} {navLinks} />
     <RightNavBar>
       <li>
+        <a
+          href="/random/"
+          class="nav-action text-5"
+          aria-label={randomPostLabel}
+          title={randomPostLabel}
+        >
+          <div class="i-ri-dice-line"></div>
+        </a>
+      </li>
+      <li>
         <button
           type="button"
-          class="text-5 pb-2.5 pl-2 pr-2 pt-2.5 border-none bg-transparent cursor-pointer"
+          class="nav-action text-5 border-none bg-transparent"
           onclick={handleToggleTheme}
           aria-label="Toggle theme"
         >
@@ -95,7 +107,7 @@
         <button
           type="button"
           id="search"
-          class="text-5 pb-2.5 pl-2 pr-2 pt-2.5 border-none bg-transparent cursor-pointer"
+          class="nav-action text-5 border-none bg-transparent"
           onclick={handleSearch}
           aria-label="Search"
         >
@@ -127,5 +139,15 @@
       rgba(0, 0, 0, 0) 100%
     );
     text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+  }
+
+  .nav-action {
+    padding: 0.625rem 0.5rem 0.625rem;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

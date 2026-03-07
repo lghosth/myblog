@@ -125,5 +125,12 @@
     "title": "动态",
     "noContent": "暂无动态",
     "publishedAt": "发布于"
+  },
+  "random": {
+    "title": "随机文章",
+    "redirecting": "正在跳转到随机文章...",
+    "noPost": "暂无可跳转的文章",
+    "retry": "重新随机",
+    "noScript": "当前浏览器未启用 JavaScript，请先返回首页手动挑选文章。"
   }
 }

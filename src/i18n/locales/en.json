@@ -125,5 +125,12 @@
     "title": "Moments",
     "noContent": "No moments available",
     "publishedAt": "Published on"
+  },
+  "random": {
+    "title": "Random Post",
+    "redirecting": "Redirecting to a random post...",
+    "noPost": "No posts available",
+    "retry": "Try Again",
+    "noScript": "JavaScript is disabled in this browser. Please go back home and pick a post manually."
   }
 }
