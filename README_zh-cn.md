@@ -8,9 +8,12 @@
 
 这是 [Hexo Theme ShokaX](https://github.com/theme-shoka-x/hexo-theme-shokaX) 在 Astro 上的重构版本，使用 Astro + Svelte 5 + UnoCSS 技术栈
 
-[<img width="3840" height="2160" alt="1" src="https://github.com/user-attachments/assets/e740fc5f-c66f-4500-9da8-036477a42af6" />](https://preview.astro.kaitaku.xyz/)
+[<img width="3840" height="2160" alt="双栏式预览" src="https://github.com/user-attachments/assets/e740fc5f-c66f-4500-9da8-036477a42af6" />](https://preview.astro.kaitaku.xyz/)
 
-🌐 在线预览：[https://preview.astro.kaitaku.xyz/](https://preview.astro.kaitaku.xyz/)
+三栏式布局：
+<img width="3840" height="2160" alt="三栏式预览" src="https://github.com/user-attachments/assets/b854e7bf-ac19-444b-aea3-661657135a10" />
+
+🌐 在线预览（双栏式）：[https://preview.astro.kaitaku.xyz/](https://preview.astro.kaitaku.xyz/)
 
 ## ✨ 功能特性
 
@@ -124,6 +127,40 @@ hyc serve
 我们使用 [LHCI](https://github.com/GoogleChrome/lighthouse-ci) 测试页面性能，每次提交下都有测试结果。我们对页面性能的最低要求为 Lighthouse 桌面 Performance 92+，实际表现在 96-98 之间：
 
 ![Lighthouse 结果](https://github.com/user-attachments/assets/c355daf9-4a83-4907-a65c-7fc582644049)
+
+## 🖌️ 三栏式布局
+
+我们在 ShokaX Astro 中引入了实验性的三栏式布局：
+
+<img width="3840" height="2160" alt="三栏式预览" src="https://github.com/user-attachments/assets/47041d58-ae29-40cc-b3fd-31787db83cac" />
+
+右侧边栏中可以配置显示卡片和它们的顺序，目前已经支持的有：
+
+- 公告
+- 全站搜索
+- 日历
+- 最近动态
+- 随机文章
+- 标签云
+
+可通过修改配置文件启用：
+
+```ts
+layout: {
+  mode: "three-column",
+  rightSidebar: {
+    order: ["announcement", "search", "calendar", "recentMoments", "randomPosts", "tagCloud"],
+    announcement: true,
+    search: true,
+    calendar: true,
+    recentMoments: true,
+    randomPosts: true,
+    tagCloud: true,
+  },
+},
+```
+
+右侧边栏中仅在宽屏（桌面端）显示，手机端为原双栏布局
 
 ## 🤝 贡献
 

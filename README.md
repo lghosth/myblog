@@ -8,9 +8,12 @@
 
 This project is a reconstruction of [Hexo Theme ShokaX](https://github.com/theme-shoka-x/hexo-theme-shokaX) on Astro, built with Astro + Svelte 5 + UnoCSS.
 
-[<img width="3840" height="2160" alt="1" src="https://github.com/user-attachments/assets/e740fc5f-c66f-4500-9da8-036477a42af6" />](https://preview.astro.kaitaku.xyz/)
+[<img width="3840" height="2160" alt="Two-column preview" src="https://github.com/user-attachments/assets/e740fc5f-c66f-4500-9da8-036477a42af6" />](https://preview.astro.kaitaku.xyz/)
 
-🌐 Live preview: [https://preview.astro.kaitaku.xyz/](https://preview.astro.kaitaku.xyz/)
+Three-column layout preview:
+<img width="3840" height="2160" alt="Three-column preview" src="https://github.com/user-attachments/assets/b854e7bf-ac19-444b-aea3-661657135a10" />
+
+🌐 Live preview (two-column): [https://preview.astro.kaitaku.xyz/](https://preview.astro.kaitaku.xyz/)
 
 ## ✨ Features
 
@@ -124,6 +127,40 @@ hyc serve
 We use [LHCI](https://github.com/GoogleChrome/lighthouse-ci) to test page performance, and each commit includes test results. Our minimum requirement is Lighthouse desktop Performance 92+, and in practice the score is usually around 96–98:
 
 ![Lighthouse Results](https://github.com/user-attachments/assets/c355daf9-4a83-4907-a65c-7fc582644049)
+
+## 🖌️ Three-Column Layout
+
+We have introduced an experimental three-column layout in ShokaX Astro:
+
+<img width="3840" height="2160" alt="Three-column layout preview" src="https://github.com/user-attachments/assets/47041d58-ae29-40cc-b3fd-31787db83cac" />
+
+You can configure which cards are shown in the right sidebar and in what order. The currently supported cards are:
+
+- Announcement
+- Site search
+- Calendar
+- Recent moments
+- Random posts
+- Tag cloud
+
+You can enable it by editing the configuration file:
+
+```ts
+layout: {
+  mode: "three-column",
+  rightSidebar: {
+    order: ["announcement", "search", "calendar", "recentMoments", "randomPosts", "tagCloud"],
+    announcement: true,
+    search: true,
+    calendar: true,
+    recentMoments: true,
+    randomPosts: true,
+    tagCloud: true,
+  },
+},
+```
+
+The right sidebar is shown only on wide screens (desktop). On mobile, the original two-column layout is used.
 
 ## 🤝 Contributing
 
