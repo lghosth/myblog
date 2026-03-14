@@ -278,7 +278,7 @@
       position: fixed;
       right: 0;
       background: var(--grey-1);
-      box-shadow: 0 0.375rem 0.9375rem 0.3125rem oklch(0 0 0 / 0.2);
+      box-shadow: var(--shadow-sidebar-mobile);
       z-index: 100;
       width: 280px;
       height: 100%;

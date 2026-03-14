@@ -100,7 +100,7 @@ const {
     margin: 1rem;
     border-radius: 0.625rem;
     background: var(--grey-0);
-    box-shadow: 0 0.125rem 0.5rem oklch(0 0 0 / 0.1);
+    box-shadow: var(--shadow-card-base);
     transition:
       box-shadow 0.3s ease,
       transform 0.3s ease;
@@ -108,7 +108,7 @@ const {
   }
 
   .segment-item:hover {
-    box-shadow: 0 0 2rem var(--box-bg-shadow, oklch(0 0 0 / 0.15));
+    box-shadow: 0 0 2rem var(--box-bg-shadow);
   }
 
   .segment-item:hover .cover img {

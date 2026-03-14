@@ -76,7 +76,7 @@ const content = moment.body || "";
     padding: 1.5rem;
     padding-left: 2rem;
     border-radius: 0.75rem;
-    box-shadow: 0 2px 8px oklch(0 0 0 / 0.08);
+    box-shadow: var(--shadow-card-soft);
     margin-bottom: 1.5rem;
     transition: all 0.3s ease;
     animation: slideUpIn 0.4s ease-out forwards;
@@ -85,7 +85,7 @@ const content = moment.body || "";
 
   .moment-card:hover {
     transform: translateX(0.5rem);
-    box-shadow: 0 4px 16px oklch(0 0 0 / 0.12);
+    box-shadow: var(--shadow-card-soft-hover);
   }
 
   @keyframes slideUpIn {

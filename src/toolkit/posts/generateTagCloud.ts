@@ -8,13 +8,13 @@ interface Tag {
 interface TagCloudOptions {
   minFontSize: number; // 最小字体大小（例如 12）
   maxFontSize: number; // 最大字体大小（例如 32）
-  startColor?: string; // 起始颜色，例如 '#888888'
-  endColor?: string; // 终止颜色，例如 '#ff0000'
+  startColor?: string; // 起始颜色，例如 '#888888' / 'var(--grey-6)'
+  endColor?: string; // 终止颜色，例如 '#ff0000' / 'var(--color-blue)'
   limit?: number; // 最大处理数量
 }
 
-const DEFAULT_TAG_CLOUD_START_COLOR = "#8a8a8a";
-const DEFAULT_TAG_CLOUD_END_COLOR = "#0084ff";
+const DEFAULT_TAG_CLOUD_START_COLOR = "var(--grey-6)";
+const DEFAULT_TAG_CLOUD_END_COLOR = "var(--color-blue)";
 
 interface TagCloudItem {
   name: string;
@@ -48,11 +48,16 @@ export function generateTagCloud(tags: Tag[], options: TagCloudOptions): TagClou
   const range = maxCount - minCount || 1;
 
   const start = new TinyColor(effectiveStartColor);
+  const end = new TinyColor(effectiveEndColor);
+  const canUseTinyColor = start.isValid && end.isValid;
 
   return limited.map((tag) => {
     const weight = (tag.count - minCount) / range;
     const fontSize = Math.round(minFontSize + (maxFontSize - minFontSize) * weight);
-    const color = start.mix(effectiveEndColor, weight * 100).toHexString();
+    const mixPercent = weight * 100;
+    const color = canUseTinyColor
+      ? start.mix(effectiveEndColor, mixPercent).toHexString()
+      : `color-mix(in oklch, ${effectiveStartColor} ${100 - mixPercent}%, ${effectiveEndColor} ${mixPercent}%)`;
 
     return {
       name: tag.name,

@@ -4,7 +4,7 @@
   padding: 1rem;
   position: relative;
   background: var(--note-bg, var(--grey-2));
-  color: var(--text-color);
+  color: var(--note-text, var(--text-color));
   border-left: 0.25rem solid var(--note-border, var(--grey-4));
   font-size: 0.875rem;
   padding-left: 2.5rem;
@@ -15,7 +15,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.25rem 1rem 1rem;
-  color: var(--text-color);
+  color: var(--note-text, var(--text-color));
 }
 
 .md .note.note-card::before {
@@ -171,7 +171,7 @@
 .md .mdx-collapse[open].success > .mdx-collapse__summary,
 .md .mdx-collapse[open].warning > .mdx-collapse__summary,
 .md .mdx-collapse[open].danger > .mdx-collapse__summary {
-  color: oklch(1 0 0);
+  color: var(--grey-0);
   border-radius: 0.25rem 0.25rem 0 0;
 }
 
@@ -180,7 +180,7 @@
 .md .mdx-collapse[open].success > .mdx-collapse__summary::before,
 .md .mdx-collapse[open].warning > .mdx-collapse__summary::before,
 .md .mdx-collapse[open].danger > .mdx-collapse__summary::before {
-  color: oklch(1 0 0);
+  color: var(--grey-0);
 }
 
 .md .kbd,
@@ -189,21 +189,21 @@
   background-image: linear-gradient(var(--grey-2), var(--grey-0), var(--grey-2));
   border: 0.0625rem solid var(--grey-4);
   border-radius: 0.2rem;
-  box-shadow: 0.1rem 0.1rem 0.2rem oklch(0 0 0 / 0.1);
+  box-shadow: 0.1rem 0.1rem 0.2rem var(--grey-9-a1);
   font-family: inherit;
   padding: 0.1rem 0.3rem;
   white-space: nowrap;
 }
 
 .md mark.highlight {
-  background-color: var(--note-bg, oklch(0.954 0.068 78.1));
+  background-color: var(--note-bg, color-mix(in oklch, var(--color-yellow) 25%, transparent));
   color: inherit;
   border-radius: 0.2rem;
   padding: 0 0.2rem;
 }
 
 .md mark.highlight.default {
-  --note-bg: oklch(0.954 0.068 78.1);
+  --note-bg: color-mix(in oklch, var(--color-yellow) 25%, transparent);
 }
 
 span.label {
@@ -454,11 +454,11 @@ span.label {
 }
 
 .md .spoiler:not(.bulr):hover {
-  color: oklch(1 0 0);
+  color: var(--grey-0);
 }
 
 .md .bulr {
-  text-shadow: oklch(0 0 0 / 0.7) 0 0 0.625rem;
+  text-shadow: color-mix(in oklch, var(--grey-9) 70%, transparent) 0 0 0.625rem;
   color: transparent;
 }
 

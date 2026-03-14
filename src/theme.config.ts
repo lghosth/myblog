@@ -101,8 +101,8 @@ export default defineConfig({
     },
   },
   tagCloud: {
-    startColor: "#8a8a8a",
-    endColor: "#0084ff",
+    startColor: "var(--grey-6)",
+    endColor: "var(--color-blue)",
   },
   widgets: {
     randomPosts: true,
