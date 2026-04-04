@@ -66,20 +66,20 @@ export async function getStaticPaths() {
       // 处理加密文章
       let encryptedContent: EncryptedData | undefined;
       let encryptedToc: EncryptedData | undefined;
+      let renderedContentHtml: string | undefined;
       let isEncrypted = false;
 
       const { Content, headings } = await render(post);
 
+      const renderedHtml = wrapRenderedImages(
+        wrapRenderedCodeBlocks(await container.renderToString(Content)),
+      );
+
       if (post.data.encrypted && post.data.password) {
         isEncrypted = true;
 
-        // 使用 renderToString 渲染文章内容为 HTML
-        const html = wrapRenderedImages(
-          wrapRenderedCodeBlocks(await container.renderToString(Content)),
-        );
-
         // 加密内容
-        encryptedContent = await encryptContent(html, post.data.password);
+        encryptedContent = await encryptContent(renderedHtml, post.data.password);
 
         // 加密 TOC
         const tocData = headings.map((h) => ({
@@ -93,6 +93,8 @@ export async function getStaticPaths() {
             post.data.password,
           );
         }
+      } else {
+        renderedContentHtml = renderedHtml;
       }
 
       return {
@@ -117,6 +119,7 @@ export async function getStaticPaths() {
             : undefined,
           relatedPosts,
           isEncrypted,
+          renderedContentHtml,
           encryptedContent,
           encryptedToc,
           headings,
@@ -147,6 +150,7 @@ interface Props {
     category?: string;
   }[];
   isEncrypted: boolean;
+  renderedContentHtml?: string;
   encryptedContent?: EncryptedData;
   encryptedToc?: EncryptedData;
   headings: import("astro:content").RenderResult["headings"];
@@ -158,12 +162,11 @@ const {
   nextPost,
   relatedPosts,
   isEncrypted,
+  renderedContentHtml,
   encryptedContent,
   encryptedToc,
   headings,
 } = Astro.props as Props;
-
-const { Content } = await render(post);
 
 // Build TOC from headings (加密文章的 TOC 在前端解密后更新)
 const toc: TocItem[] = isEncrypted
@@ -389,7 +392,7 @@ const postMeta = {
                 title={post.data.title}
               />
             ) : (
-              <Content />
+              <div class="post-content" set:html={renderedContentHtml ?? ""} />
             )
           }
 
