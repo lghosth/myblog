@@ -128,6 +128,60 @@ We use [LHCI](https://github.com/GoogleChrome/lighthouse-ci) to test page perfor
 
 <img width="1702" height="952" alt="lighthouse" src="https://github.com/user-attachments/assets/05b8768f-5f04-4204-8f4f-7f2f6f30e102" />
 
+## 📦 Versioning
+
+ShokaX Astro follows **SemVer** for version control. Each release will have a corresponding **GitHub Release** and **Git tag** (following the `vX.Y.Z` format). You can update or roll back to a specific version by checking out the corresponding tag.
+
+In this section, **API** refers to publicly exposed project scripts (such as `build`, `dev`, etc.), configurations and configuration options, and external TypeScript APIs.
+
+Specifically, our version numbers follow the format `x.y.z` and adhere to the following release strategy:
+
+### 1. `x`: Major Version
+
+This version includes changes such as:
+
+1. Removal of deprecated APIs
+2. Breaking changes to the underlying architecture or core system
+3. Changes that are also allowed in minor or patch versions
+
+When upgrading a **major version**, existing projects may fail to run without modification. Additionally, if you have modified the source code of ShokaX Astro yourself, it may cause large-scale Git conflicts that must be resolved manually.
+
+### 2. `y`: Minor Version
+
+This version includes changes such as:
+
+1. Marking specific APIs as **deprecated** (deprecated APIs will only be removed in the next major version)
+2. Introducing new features
+3. Large-scale internal refactoring that does **not** affect the public API
+4. Changes that are also allowed in patch versions
+
+Upgrading a **minor version** will not affect compatibility with existing projects. Existing projects can upgrade without modification.
+
+### 3. `z`: Patch Version
+
+This version includes changes such as:
+
+1. Bug fixes
+2. Security vulnerability fixes
+3. Performance improvements
+4. Other small, non-breaking changes
+
+Upgrading a **patch version** will not affect compatibility with existing projects. Existing projects can upgrade without modification.
+
+### Pre-release Versions
+
+Before releasing a **major version**, we may publish **pre-release versions** to gather feedback and conduct testing for new changes. The pre-release policies are:
+
+1. **`alpha` releases** follow the same strategy as major versions and may introduce breaking changes.
+2. **`beta` releases** follow the strategy of minor versions, but may introduce breaking changes if absolutely necessary.
+3. **`rc` (Release Candidate) releases** follow the strategy of minor versions.
+
+The format of a pre-release version is `x.y.z-alpha.1`, and the precedence order is:
+
+`rc` > `beta` > `alpha`
+
+It is **not recommended** to use pre-release versions in production environments.
+
 ## 🖌️ Three-Column Layout
 
 We have introduced an experimental three-column layout in ShokaX Astro:
@@ -171,7 +225,7 @@ Pull requests are welcome. The project uses the following workflows to validate 
   - Accessibility >= 0.9
   - Best Practices and SEO >= 0.95
 - CodeQL Scan & Code Quality
-- ~~E2E testing~~ (currently being introduced)
+- E2E testing
 
 If CI does not pass, you can still submit a PR and we will help improve it.
 
