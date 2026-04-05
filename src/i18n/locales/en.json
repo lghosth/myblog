@@ -4,7 +4,8 @@
     "posts": "Posts",
     "categories": "Categories",
     "tags": "Tags",
-    "archives": "Archives"
+    "archives": "Archives",
+    "statistics": "Statistics"
   },
   "post": {
     "wordCount": "Word Count",
@@ -55,6 +56,18 @@
     "ok": "OK",
     "emh": "Hmm..",
     "keepTrying": "Keep it up"
+  },
+  "statistics": {
+    "title": "Article Statistics",
+    "totalPosts": "Total Posts",
+    "totalCategories": "Total Categories",
+    "totalTags": "Total Tags",
+    "topCategory": "Most Used Category",
+    "postCount": "Posts",
+    "monthlyPosts": "Monthly Publishing Trend",
+    "categoryDistribution": "Category Distribution (Top 10)",
+    "tagDistribution": "Tag Distribution (Top 16)",
+    "latestMonthSummary": "In {{month}}, {{count}} posts were published."
   },
   "sidebar": {
     "toc": "Table of Contents",

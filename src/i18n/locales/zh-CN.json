@@ -4,7 +4,8 @@
     "posts": "文章",
     "categories": "分类",
     "tags": "标签",
-    "archives": "归档"
+    "archives": "归档",
+    "statistics": "统计"
   },
   "post": {
     "wordCount": "字数统计",
@@ -55,6 +56,18 @@
     "ok": "还行",
     "emh": "嗯..",
     "keepTrying": "继续努力"
+  },
+  "statistics": {
+    "title": "文章统计",
+    "totalPosts": "文章总数",
+    "totalCategories": "分类总数",
+    "totalTags": "标签总数",
+    "topCategory": "最常用分类",
+    "postCount": "文章数",
+    "monthlyPosts": "每月发布趋势",
+    "categoryDistribution": "分类文章分布（Top 10）",
+    "tagDistribution": "Tag 文章分布（Top 16）",
+    "latestMonthSummary": "最近统计月份 {{month}} 共发布 {{count}} 篇文章。"
   },
   "sidebar": {
     "toc": "目录",
