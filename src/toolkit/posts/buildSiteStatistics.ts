@@ -29,7 +29,7 @@ interface BuildSiteStatisticsOptions {
 function sortCountItems(map: Map<string, number>): CountItem[] {
   return Array.from(map.entries())
     .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "zh-CN"));
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
 
 export function buildSiteStatistics(

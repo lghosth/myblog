@@ -70,6 +70,7 @@
   let tagChart: echarts.ECharts | null = null;
 
   let resizeObserver: ResizeObserver | null = null;
+  let themeObserver: MutationObserver | null = null;
 
   /**
    * 将主题 token 解析为实际颜色值，避免 Canvas 图表无法正确解析 CSS 变量而回退为黑色。
@@ -185,7 +186,7 @@
   }
 
   function createCategoryOption(): ChartOption {
-    const topCategories = categoryCounts.slice(0, 12);
+    const topCategories = categoryCounts.slice(0, 10);
     const palette = [
       resolveThemeColor("--color-red"),
       resolveThemeColor("--color-orange"),
@@ -279,7 +280,7 @@
   }
 
   function createTagOption(): ChartOption {
-    const topTags = tagCounts.slice(0, 12);
+    const topTags = tagCounts.slice(0, 16);
     const palette = [
       resolveThemeColor("--color-blue"),
       resolveThemeColor("--color-aqua"),
@@ -390,6 +391,12 @@
     }
   }
 
+  function refreshChartOptions() {
+    monthlyChart?.setOption(createMonthlyOption(), { notMerge: true });
+    categoryChart?.setOption(createCategoryOption(), { notMerge: true });
+    tagChart?.setOption(createTagOption(), { notMerge: true });
+  }
+
   function bindResizeObserver() {
     if (typeof ResizeObserver === "undefined") {
       return;
@@ -415,10 +422,25 @@
   onMount(() => {
     renderCharts();
     bindResizeObserver();
+
+    if (typeof MutationObserver !== "undefined") {
+      themeObserver = new MutationObserver((mutations) => {
+        const themeChanged = mutations.some((mutation) => mutation.attributeName === "data-theme");
+        if (themeChanged) {
+          refreshChartOptions();
+        }
+      });
+
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+    }
   });
 
   onDestroy(() => {
     resizeObserver?.disconnect();
+    themeObserver?.disconnect();
 
     monthlyChart?.dispose();
     categoryChart?.dispose();

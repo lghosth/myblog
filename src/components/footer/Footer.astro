@@ -114,6 +114,7 @@ const iconColor = sanitizeThemeColor(
             <a
               href="https://astro.build"
               target="_blank"
+              rel="noopener noreferrer"
               class="hover:opacity-80 border-b border-dashed"
             >
               Astro
@@ -122,6 +123,7 @@ const iconColor = sanitizeThemeColor(
             <a
               href="https://github.com/theme-shoka-x/astro-blog-shokax"
               target="_blank"
+              rel="noopener noreferrer"
               aria-label="ShokaX GitHub 项目"
               class="hover:opacity-80 border-b border-dashed"
             >
@@ -139,6 +141,7 @@ const iconColor = sanitizeThemeColor(
             <a
               href={config.icp.icpurl || "https://beian.miit.gov.cn/"}
               target="_blank"
+              rel="noopener noreferrer"
               class="text-grey-5 hover:opacity-80 border-b border-dashed"
             >
               {config.icp.icpnumber}
@@ -149,6 +152,7 @@ const iconColor = sanitizeThemeColor(
                 <a
                   target="_blank"
                   href={`https://beian.mps.gov.cn/#/query/webSearch?code=${config.icp.recordcode}`}
+                  rel="noopener noreferrer"
                   class="inline-block text-grey-5 hover:opacity-80 border-b border-dashed"
                 >
                   {config.icp.icon && (

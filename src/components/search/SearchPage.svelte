@@ -311,6 +311,7 @@
 
           <div
             class="pagefind-component-results"
+            id="pagefind-results-region"
             data-testid="pagefind-results-region"
           >
             <pagefind-summary instance={pagefindInstanceName}

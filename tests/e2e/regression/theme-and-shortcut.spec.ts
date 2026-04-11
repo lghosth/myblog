@@ -12,12 +12,13 @@ async function openSearchDialog(page: import("@playwright/test").Page) {
   }
 
   for (let attempt = 0; attempt < 6; attempt += 1) {
-    await openSearchButton.click();
+    await openSearchButton.dispatchEvent("click");
 
-    try {
-      await expect(searchDialog).toBeVisible({ timeout: 1000 });
+    if (await searchDialog.isVisible()) {
       return searchDialog;
-    } catch {}
+    }
+
+    await page.waitForTimeout(150);
   }
 
   await expect(searchDialog).toBeVisible();
