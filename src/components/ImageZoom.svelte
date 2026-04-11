@@ -4,6 +4,7 @@
   import { onDestroy, onMount } from "svelte";
 
   let container = $state<HTMLElement | null>(null);
+  let dialogElement = $state<HTMLDialogElement | null>(null);
   let isOpen = $state(false);
   let previewSrc = $state("");
   let previewAlt = $state("");
@@ -84,6 +85,21 @@
       document.body.style.overflow = "hidden";
     }
   };
+
+  $effect(() => {
+    if (!dialogElement || typeof dialogElement.showModal !== "function") {
+      return;
+    }
+
+    if (isOpen && !dialogElement.open) {
+      dialogElement.showModal();
+      return;
+    }
+
+    if (!isOpen && dialogElement.open) {
+      dialogElement.close();
+    }
+  });
 
   const bindImage = () => {
     cleanupImageListeners?.();
@@ -197,29 +213,32 @@
   <slot />
 </div>
 
-{#if isOpen}
-  <div
-    class="image-zoom-overlay {isClosing ? 'closing' : ''}"
-    role="dialog"
-    aria-modal="true"
-    aria-label={previewAlt || "图片预览"}
-    tabindex="-1"
-    onclick={handleOverlayClick}
-    onkeydown={(event) => {
-      if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        requestClosePreview();
-      }
-    }}
+<dialog
+  bind:this={dialogElement}
+  class="image-zoom-overlay {isOpen ? '' : 'hidden'} {isClosing ? 'closing' : ''}"
+  aria-label={previewAlt || "图片预览"}
+  onclick={handleOverlayClick}
+  onclose={() => {
+    if (isOpen || isClosing) {
+      finalizeClosePreview();
+    }
+  }}
+  onkeydown={(event) => {
+    if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      requestClosePreview();
+    }
+  }}
+>
+  <button
+    type="button"
+    class="image-zoom-close"
+    aria-label="关闭图片预览"
+    onclick={requestClosePreview}
   >
-    <button
-      type="button"
-      class="image-zoom-close"
-      aria-label="关闭图片预览"
-      onclick={requestClosePreview}
-    >
-      ×
-    </button>
+    ×
+  </button>
+  {#if previewSrc}
     <img
       class="image-zoom-content"
       src={previewSrc}
@@ -227,11 +246,11 @@
       loading="eager"
       decoding="async"
     />
-    {#if previewAlt}
-      <p class="image-zoom-caption">{previewAlt}</p>
-    {/if}
-  </div>
-{/if}
+  {/if}
+  {#if previewAlt}
+    <p class="image-zoom-caption">{previewAlt}</p>
+  {/if}
+</dialog>
 
 <style>
   :global(image-zoom) {
@@ -265,11 +284,27 @@
     z-index: var(--z-fullscreen);
     display: grid;
     place-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    border: 0;
+    margin: 0;
     padding: 2rem 1rem;
     box-sizing: border-box;
     background: var(--codeblock-overlay-bg, rgba(8, 10, 16, 0.72));
     backdrop-filter: blur(0.35rem);
     animation: image-zoom-fade-in 220ms ease forwards;
+  }
+
+  .image-zoom-overlay.hidden {
+    display: none;
+  }
+
+  .image-zoom-overlay::backdrop {
+    background: var(--codeblock-overlay-bg, rgba(8, 10, 16, 0.72));
+    backdrop-filter: blur(0.35rem);
   }
 
   .image-zoom-overlay.closing {
