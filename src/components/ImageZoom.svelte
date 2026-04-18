@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
+  import { currentLocale, getT } from "@/i18n";
   import { lockBodyScroll } from "@/toolkit/ui/scrollLock";
 
   let container = $state<HTMLElement | null>(null);
@@ -20,6 +21,7 @@
   const CLOSE_ANIMATION_MS = 220;
   type PreviewImage = { src: string; alt: string };
   type PreviewImageCandidate = PreviewImage & { element: HTMLImageElement };
+  const t = getT(currentLocale);
 
   let releaseBodyScrollLock: (() => void) | null = null;
 
@@ -300,7 +302,7 @@
 <dialog
   bind:this={dialogElement}
   class="image-zoom-overlay {isOpen ? '' : 'hidden'} {isClosing ? 'closing' : ''}"
-  aria-label={previewAlt || "图片预览"}
+  aria-label={previewAlt || t("imageZoom.dialog")}
   onclick={handleOverlayClick}
   onclose={() => {
     if (isOpen || isClosing) {
@@ -318,7 +320,7 @@
     <button
       type="button"
       class="image-zoom-nav image-zoom-nav-prev"
-      aria-label="查看上一张图片"
+      aria-label={t("imageZoom.previous")}
       onclick={showPreviousPreview}
     >
       ‹
@@ -327,7 +329,7 @@
   <button
     type="button"
     class="image-zoom-close"
-    aria-label="关闭图片预览"
+    aria-label={t("imageZoom.close")}
     onclick={requestClosePreview}
   >
     ×
@@ -348,7 +350,7 @@
     <button
       type="button"
       class="image-zoom-nav image-zoom-nav-next"
-      aria-label="查看下一张图片"
+      aria-label={t("imageZoom.next")}
       onclick={showNextPreview}
     >
       ›

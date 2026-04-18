@@ -182,6 +182,12 @@
     "publishedAt": "發佈於",
     "imageAlt": "動態圖片 {{index}}"
   },
+  "imageZoom": {
+    "dialog": "圖片預覽",
+    "close": "關閉圖片預覽",
+    "previous": "查看上一張圖片",
+    "next": "查看下一張圖片"
+  },
   "random": {
     "title": "隨機文章",
     "redirecting": "正在跳轉到隨機文章...",

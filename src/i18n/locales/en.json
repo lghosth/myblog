@@ -182,6 +182,12 @@
     "publishedAt": "Published on",
     "imageAlt": "Moment image {{index}}"
   },
+  "imageZoom": {
+    "dialog": "Image preview",
+    "close": "Close image preview",
+    "previous": "View previous image",
+    "next": "View next image"
+  },
   "random": {
     "title": "Random Post",
     "redirecting": "Redirecting to a random post...",

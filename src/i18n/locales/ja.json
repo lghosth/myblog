@@ -182,6 +182,12 @@
     "publishedAt": "公開日",
     "imageAlt": "モーメント画像 {{index}}"
   },
+  "imageZoom": {
+    "dialog": "画像プレビュー",
+    "close": "画像プレビューを閉じる",
+    "previous": "前の画像を表示",
+    "next": "次の画像を表示"
+  },
   "random": {
     "title": "ランダム記事",
     "redirecting": "ランダム記事へ移動しています...",

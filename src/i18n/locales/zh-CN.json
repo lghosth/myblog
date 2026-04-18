@@ -182,6 +182,12 @@
     "publishedAt": "发布于",
     "imageAlt": "动态图片 {{index}}"
   },
+  "imageZoom": {
+    "dialog": "图片预览",
+    "close": "关闭图片预览",
+    "previous": "查看上一张图片",
+    "next": "查看下一张图片"
+  },
   "random": {
     "title": "随机文章",
     "redirecting": "正在跳转到随机文章...",
