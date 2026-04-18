@@ -8,10 +8,10 @@
 
 这是 [Hexo Theme ShokaX](https://github.com/theme-shoka-x/hexo-theme-shokaX) 在 Astro 上的重构版本，使用 Astro + Svelte 5 + UnoCSS 技术栈
 
-[<img width="1920" height="1080" alt="三栏式预览" src="https://github.com/user-attachments/assets/b8ad5bbe-43a3-4c49-a32f-45ba5ba3dcd1" />](https://preview.astro.kaitaku.xyz/)
+[<img width="1920" height="911" alt="三栏式预览" src="https://github.com/user-attachments/assets/b8ad5bbe-43a3-4c49-a32f-45ba5ba3dcd1" />](https://preview.astro.kaitaku.xyz/)
 
 双栏式布局：
-<img width="1920" height="1080" alt="双栏式预览" src="https://github.com/user-attachments/assets/df01c009-68cf-4bb3-9148-ff61afc0d159" />
+<img width="1920" height="911" alt="双栏式预览" src="https://github.com/user-attachments/assets/df01c009-68cf-4bb3-9148-ff61afc0d159" />
 
 🌐 在线预览（三栏式）：[https://preview.astro.kaitaku.xyz/](https://preview.astro.kaitaku.xyz/)
 
@@ -183,7 +183,7 @@ ShokaX Astro 遵循 SemVer 进行版本控制，每次版本发布后会设置�
 
 我们在 ShokaX Astro 中引入了三栏式布局：
 
-<img width="1920" height="1080" alt="三栏式预览" src="https://github.com/user-attachments/assets/b8ad5bbe-43a3-4c49-a32f-45ba5ba3dcd1" />
+<img width="1920" height="911" alt="三栏式预览" src="https://github.com/user-attachments/assets/b8ad5bbe-43a3-4c49-a32f-45ba5ba3dcd1" />
 
 右侧边栏中可以配置显示卡片和它们的顺序，目前已经支持的有：
 

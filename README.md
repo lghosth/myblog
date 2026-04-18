@@ -8,10 +8,10 @@
 
 This project is a reconstruction of [Hexo Theme ShokaX](https://github.com/theme-shoka-x/hexo-theme-shokaX) on Astro, built with Astro + Svelte 5 + UnoCSS.
 
-[<img width="1920" height="1080" alt="Three-column preview" src="https://github.com/user-attachments/assets/b8ad5bbe-43a3-4c49-a32f-45ba5ba3dcd1" />](https://preview.astro.kaitaku.xyz/)
+[<img width="1920" height="911" alt="Three-column preview" src="https://github.com/user-attachments/assets/b8ad5bbe-43a3-4c49-a32f-45ba5ba3dcd1" />](https://preview.astro.kaitaku.xyz/)
 
 Two-column layout:
-<img width="1920" height="1080" alt="Two-column preview" src="https://github.com/user-attachments/assets/df01c009-68cf-4bb3-9148-ff61afc0d159" />
+<img width="1920" height="911" alt="Two-column preview" src="https://github.com/user-attachments/assets/df01c009-68cf-4bb3-9148-ff61afc0d159" />
 
 🌐 Live preview (three-column): [https://preview.astro.kaitaku.xyz/](https://preview.astro.kaitaku.xyz/)
 
@@ -187,7 +187,7 @@ It is **not recommended** to use pre-release versions in production environments
 
 We have introduced a three-column layout in ShokaX Astro:
 
-<img width="1920" height="1080" alt="Three-column layout preview" src="https://github.com/user-attachments/assets/b8ad5bbe-43a3-4c49-a32f-45ba5ba3dcd1" />
+<img width="1920" height="911" alt="Three-column layout preview" src="https://github.com/user-attachments/assets/b8ad5bbe-43a3-4c49-a32f-45ba5ba3dcd1" />
 
 You can configure which cards are shown in the right sidebar and in what order. The currently supported cards are:
 
