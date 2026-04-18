@@ -117,6 +117,9 @@ export const DEFAULT_THEME_CONFIG: ShokaXThemeConfig = {
       minSimilarity: 0.4,
     },
   },
+  diagnostics: {
+    suppressFsWatcherMaxListenersWarning: true,
+  },
   nyxPlayer: {
     enable: false,
     preset: "shokax",
