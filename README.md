@@ -227,6 +227,7 @@ Pull requests are welcome. The project uses the following workflows to validate 
   - Best Practices and SEO >= 0.95
 - CodeQL Scan & Code Quality
 - E2E testing
+- [Lychee](https://lychee.cli.rs/)
 
 If CI does not pass, you can still submit a PR and we will help improve it.
 

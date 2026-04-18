@@ -223,6 +223,7 @@ layout: {
   - Best Practices 和 SEO >= 0.95
 - CodeQL Scan & Code Quality
 - E2E 测试
+- [Lychee](https://lychee.cli.rs/)
 
 如果出现未通过 CI 的情况也可提交 PR，我们会协助修改
 

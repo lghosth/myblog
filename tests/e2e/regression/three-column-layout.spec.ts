@@ -14,6 +14,7 @@ test("@regression 超宽屏首页渲染三栏布局与右侧栏卡片", async ({
   await expect(leftSidebar).toBeVisible();
   await expect(mainColumn).toBeVisible();
   await expect(rightSidebar).toBeVisible();
+  // 日历不是 extraCard，不计入其中，所以总数是 5 个而不是 6 个
   await expect(rightSidebar.locator(".extra-card, .extra-empty-card")).toHaveCount(5);
   await expect(rightSidebar.getByRole("heading", { name: /公告/i })).toBeVisible();
   await expect(rightSidebar.getByRole("heading", { name: /搜索/i })).toBeVisible();
