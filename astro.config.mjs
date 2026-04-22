@@ -45,7 +45,10 @@ if (themeConfig.diagnostics?.suppressFsWatcherMaxListenersWarning !== false) {
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://preview.astro.kaitaku.xyz",
+  site: "https://blog.charolron.top/",
+  // 如果后续改为 username.github.io/repo/ 子路径部署，再开启 base。
+  // base: "/myblog/",
+  output: "static",
   trailingSlash: "always",
   build: {
     format: "directory",
