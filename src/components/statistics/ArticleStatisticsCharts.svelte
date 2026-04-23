@@ -1,31 +1,14 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import * as echarts from "echarts/core";
-  import { BarChart, LineChart } from "echarts/charts";
-  import {
-    GridComponent,
-    LegendComponent,
-    TitleComponent,
-    TooltipComponent,
-    type GridComponentOption,
-    type LegendComponentOption,
-    type TitleComponentOption,
-    type TooltipComponentOption,
+  import type { ComposeOption, EChartsType } from "echarts/core";
+  import type {
+    GridComponentOption,
+    LegendComponentOption,
+    TitleComponentOption,
+    TooltipComponentOption,
   } from "echarts/components";
-  import { CanvasRenderer } from "echarts/renderers";
-  import type { ComposeOption } from "echarts/core";
   import type { BarSeriesOption, LineSeriesOption } from "echarts/charts";
   import { currentLocale, getT } from "@/i18n";
-
-  echarts.use([
-    BarChart,
-    LineChart,
-    GridComponent,
-    TooltipComponent,
-    LegendComponent,
-    TitleComponent,
-    CanvasRenderer,
-  ]);
 
   type ChartOption = ComposeOption<
     | GridComponentOption
@@ -64,12 +47,14 @@
   let categoryChartElement = $state<HTMLDivElement | null>(null);
   let tagChartElement = $state<HTMLDivElement | null>(null);
 
-  let monthlyChart: echarts.ECharts | null = null;
-  let categoryChart: echarts.ECharts | null = null;
-  let tagChart: echarts.ECharts | null = null;
+  let monthlyChart: EChartsType | null = null;
+  let categoryChart: EChartsType | null = null;
+  let tagChart: EChartsType | null = null;
 
   let resizeObserver: ResizeObserver | null = null;
   let themeObserver: MutationObserver | null = null;
+  let echartsModule: (typeof import("echarts/core")) | null = null;
+  const cssColorCache = new Map<string, string>();
 
   /**
    * 将主题 token 解析为实际颜色值，避免 Canvas 图表无法正确解析 CSS 变量而回退为黑色。
@@ -82,12 +67,81 @@
     return value || token;
   }
 
+  /**
+   * 将任意 CSS 颜色表达式解析成浏览器已计算的 rgb/rgba 字符串。
+   * ECharts Canvas 侧不可靠支持 var()/color-mix()，这里统一先转成实际颜色。
+   */
+  function resolveCssColor(expression: string): string {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return expression;
+    }
+
+    const cached = cssColorCache.get(expression);
+    if (cached) {
+      return cached;
+    }
+
+    const probe = document.createElement("span");
+    probe.style.position = "fixed";
+    probe.style.left = "-9999px";
+    probe.style.top = "-9999px";
+    probe.style.pointerEvents = "none";
+    probe.style.opacity = "0";
+    probe.style.color = expression;
+    document.body.append(probe);
+
+    const resolved = window.getComputedStyle(probe).color.trim() || expression;
+    probe.remove();
+
+    cssColorCache.set(expression, resolved);
+    return resolved;
+  }
+
+  async function ensureEcharts() {
+    if (echartsModule) {
+      return echartsModule;
+    }
+
+    const [core, charts, components, renderers] = await Promise.all([
+      import("echarts/core"),
+      import("echarts/charts"),
+      import("echarts/components"),
+      import("echarts/renderers"),
+    ]);
+
+    core.use([
+      charts.BarChart,
+      charts.LineChart,
+      components.GridComponent,
+      components.TooltipComponent,
+      components.LegendComponent,
+      components.TitleComponent,
+      renderers.CanvasRenderer,
+    ]);
+
+    echartsModule = core;
+    return core;
+  }
+
   function createMonthlyOption(): ChartOption {
     const lineColor = resolveThemeColor("--color-purple");
     const pointColor = resolveThemeColor("--color-red");
     const titleColor = resolveThemeColor("--color-purple");
     const xAxisColor = resolveThemeColor("--color-aqua");
     const yAxisColor = resolveThemeColor("--color-purple");
+    const tooltipBackgroundColor = resolveCssColor(
+      "color-mix(in srgb, var(--grey-1) 94%, transparent)",
+    );
+    const tooltipBorderColor = resolveCssColor(
+      "color-mix(in srgb, var(--color-purple) 30%, var(--grey-4))",
+    );
+    const tooltipTextColor = resolveThemeColor("--grey-7");
+    const axisLineColor = resolveThemeColor("--grey-4");
+    const splitLineColor = resolveThemeColor("--grey-3");
+    const areaColor = resolveCssColor(
+      "color-mix(in srgb, var(--color-purple) 26%, var(--color-pink) 18%)",
+    );
+
     return {
       title: {
         text: t("statistics.monthlyPosts"),
@@ -100,10 +154,10 @@
       },
       tooltip: {
         trigger: "axis",
-        backgroundColor: "color-mix(in srgb, var(--grey-1) 94%, transparent)",
-        borderColor: "color-mix(in srgb, var(--color-purple) 30%, var(--grey-4))",
+        backgroundColor: tooltipBackgroundColor,
+        borderColor: tooltipBorderColor,
         textStyle: {
-          color: "var(--grey-7)",
+          color: tooltipTextColor,
         },
       },
       grid: {
@@ -121,7 +175,7 @@
         },
         axisLine: {
           lineStyle: {
-            color: "var(--grey-4)",
+            color: axisLineColor,
           },
         },
       },
@@ -133,7 +187,7 @@
         },
         splitLine: {
           lineStyle: {
-            color: "var(--grey-3)",
+            color: splitLineColor,
           },
         },
       },
@@ -152,8 +206,7 @@
             opacity: 1,
           },
           areaStyle: {
-            color:
-              "color-mix(in srgb, var(--color-purple) 26%, var(--color-pink) 18%)",
+            color: areaColor,
             opacity: 1,
           },
           emphasis: {
@@ -199,6 +252,16 @@
     const titleColor = resolveThemeColor("--color-red");
     const xAxisColor = resolveThemeColor("--color-orange");
     const yAxisColor = resolveThemeColor("--color-pink");
+    const tooltipBackgroundColor = resolveCssColor(
+      "color-mix(in srgb, var(--grey-1) 94%, transparent)",
+    );
+    const tooltipBorderColor = resolveCssColor(
+      "color-mix(in srgb, var(--color-orange) 34%, var(--grey-4))",
+    );
+    const tooltipTextColor = resolveThemeColor("--grey-7");
+    const splitLineColor = resolveThemeColor("--grey-3");
+    const axisLineColor = resolveThemeColor("--grey-4");
+
     return {
       color: palette,
       title: {
@@ -215,10 +278,10 @@
         axisPointer: {
           type: "shadow",
         },
-        backgroundColor: "color-mix(in srgb, var(--grey-1) 94%, transparent)",
-        borderColor: "color-mix(in srgb, var(--color-orange) 34%, var(--grey-4))",
+        backgroundColor: tooltipBackgroundColor,
+        borderColor: tooltipBorderColor,
         textStyle: {
-          color: "var(--grey-7)",
+          color: tooltipTextColor,
         },
       },
       grid: {
@@ -235,7 +298,7 @@
         },
         splitLine: {
           lineStyle: {
-            color: "var(--grey-3)",
+            color: splitLineColor,
           },
         },
       },
@@ -247,7 +310,7 @@
         },
         axisLine: {
           lineStyle: {
-            color: "var(--grey-4)",
+            color: axisLineColor,
           },
         },
       },
@@ -293,6 +356,16 @@
     const titleColor = resolveThemeColor("--color-blue");
     const xAxisColor = resolveThemeColor("--color-aqua");
     const yAxisColor = resolveThemeColor("--color-blue");
+    const tooltipBackgroundColor = resolveCssColor(
+      "color-mix(in srgb, var(--grey-1) 94%, transparent)",
+    );
+    const tooltipBorderColor = resolveCssColor(
+      "color-mix(in srgb, var(--color-blue) 34%, var(--grey-4))",
+    );
+    const tooltipTextColor = resolveThemeColor("--grey-7");
+    const axisLineColor = resolveThemeColor("--grey-4");
+    const splitLineColor = resolveThemeColor("--grey-3");
+
     return {
       color: palette,
       title: {
@@ -309,10 +382,10 @@
         axisPointer: {
           type: "shadow",
         },
-        backgroundColor: "color-mix(in srgb, var(--grey-1) 94%, transparent)",
-        borderColor: "color-mix(in srgb, var(--color-blue) 34%, var(--grey-4))",
+        backgroundColor: tooltipBackgroundColor,
+        borderColor: tooltipBorderColor,
         textStyle: {
-          color: "var(--grey-7)",
+          color: tooltipTextColor,
         },
       },
       grid: {
@@ -330,7 +403,7 @@
         },
         axisLine: {
           lineStyle: {
-            color: "var(--grey-4)",
+            color: axisLineColor,
           },
         },
       },
@@ -342,7 +415,7 @@
         },
         splitLine: {
           lineStyle: {
-            color: "var(--grey-3)",
+            color: splitLineColor,
           },
         },
       },
@@ -373,20 +446,38 @@
     };
   }
 
-  function renderCharts() {
-    if (monthlyChartElement) {
-      monthlyChart = echarts.init(monthlyChartElement);
-      monthlyChart.setOption(createMonthlyOption());
-    }
+  function disposeCharts() {
+    monthlyChart?.dispose();
+    categoryChart?.dispose();
+    tagChart?.dispose();
 
-    if (categoryChartElement) {
-      categoryChart = echarts.init(categoryChartElement);
-      categoryChart.setOption(createCategoryOption());
-    }
+    monthlyChart = null;
+    categoryChart = null;
+    tagChart = null;
+  }
 
-    if (tagChartElement) {
-      tagChart = echarts.init(tagChartElement);
-      tagChart.setOption(createTagOption());
+  async function renderCharts() {
+    try {
+      const echarts = await ensureEcharts();
+
+      disposeCharts();
+
+      if (monthlyChartElement) {
+        monthlyChart = echarts.init(monthlyChartElement);
+        monthlyChart.setOption(createMonthlyOption());
+      }
+
+      if (categoryChartElement) {
+        categoryChart = echarts.init(categoryChartElement);
+        categoryChart.setOption(createCategoryOption());
+      }
+
+      if (tagChartElement) {
+        tagChart = echarts.init(tagChartElement);
+        tagChart.setOption(createTagOption());
+      }
+    } catch (error) {
+      console.error("统计图表初始化失败：", error);
     }
   }
 
@@ -419,13 +510,19 @@
   }
 
   onMount(() => {
-    renderCharts();
-    bindResizeObserver();
+    void Promise.resolve().then(async () => {
+      await new Promise<void>((resolve) => {
+        window.requestAnimationFrame(() => resolve());
+      });
+      await renderCharts();
+      bindResizeObserver();
+    });
 
     if (typeof MutationObserver !== "undefined") {
       themeObserver = new MutationObserver((mutations) => {
         const themeChanged = mutations.some((mutation) => mutation.attributeName === "data-theme");
         if (themeChanged) {
+          cssColorCache.clear();
           refreshChartOptions();
         }
       });
@@ -440,14 +537,7 @@
   onDestroy(() => {
     resizeObserver?.disconnect();
     themeObserver?.disconnect();
-
-    monthlyChart?.dispose();
-    categoryChart?.dispose();
-    tagChart?.dispose();
-
-    monthlyChart = null;
-    categoryChart = null;
-    tagChart = null;
+    disposeCharts();
   });
 </script>
 
