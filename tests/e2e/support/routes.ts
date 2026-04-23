@@ -14,6 +14,7 @@ export const POSTS = {
   imageZoomTest: "/posts/image-zoom-test/",
   noteMdxDemo: "/posts/note-mdx-demo/",
   postMigrationTest: "/posts/post-migration-test/",
+  spoilerMdxTest: "/posts/spoiler-mdx-test/",
 } as const;
 
 export const SEARCH_TERMS = {

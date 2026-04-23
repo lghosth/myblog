@@ -629,13 +629,30 @@
 }
 
 /* Task Lists */
+.md ul.contains-task-list {
+  padding-left: 0.2em;
+}
+
+.md ul li.task-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
 .md ul li.task-list-item::before {
   content: none;
   display: none;
 }
 
 .md ul li.task-list-item input[type="checkbox"] {
-  display: none;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin: 0.45em 0 0;
+  accent-color: var(--primary-color);
+  cursor: default;
+  flex: none;
+  pointer-events: none;
 }
 
 /* ============================================

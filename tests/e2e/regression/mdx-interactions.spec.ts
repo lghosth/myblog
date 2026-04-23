@@ -38,3 +38,28 @@ test("@regression MDX Quiz 交互可触发", async ({ page }) => {
   await multiCheckButton.click();
   await expect(multiQuiz).toHaveClass(/show/);
 });
+
+test("@regression MDX Spoiler 在暗色主题下悬浮后保持可见", async ({ page }) => {
+  const response = await page.goto(POSTS.spoilerMdxTest);
+  expect(response?.ok()).toBeTruthy();
+
+  await page.evaluate(() => {
+    document.documentElement.dataset.theme = "dark";
+  });
+
+  const spoiler = page.locator(".md .spoiler").first();
+  await expect(spoiler).toBeVisible();
+
+  await spoiler.hover();
+
+  const styles = await spoiler.evaluate((element) => {
+    const computed = getComputedStyle(element);
+    return {
+      color: computed.color,
+      backgroundColor: computed.backgroundColor,
+    };
+  });
+
+  expect(styles.color).not.toBe("rgba(0, 0, 0, 0)");
+  expect(styles.color).not.toBe(styles.backgroundColor);
+});
