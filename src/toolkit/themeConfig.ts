@@ -336,6 +336,13 @@ interface LayoutConfig {
     randomPosts?: boolean;
 
     /**
+     * 右侧随机文章显示数量。
+     * - 仅在 randomPosts 为 true 时生效
+     * - 默认显示 3 篇
+     */
+    randomPostsLimit?: number;
+
+    /**
      * 是否显示标签云卡片。
      * - true：显示热门标签云
      * - false/未设置：隐藏

@@ -154,6 +154,7 @@ export const DEFAULT_THEME_CONFIG: ShokaXThemeConfig = {
       calendar: true,
       recentMoments: true,
       randomPosts: true,
+      randomPostsLimit: 3,
       tagCloud: true,
     },
   },

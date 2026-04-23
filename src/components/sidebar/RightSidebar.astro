@@ -1,7 +1,7 @@
 ---
 import { currentLocale, getT } from "@/i18n";
 import type { CollectionEntry } from "astro:content";
-import { sample } from "es-toolkit/array";
+import { shuffle } from "es-toolkit";
 import {
   normalizeRightSidebarCardOrder,
   truncateRightSidebarText,
@@ -23,6 +23,7 @@ interface Props {
     calendar?: boolean;
     recentMoments?: boolean;
     randomPosts?: boolean;
+    randomPostsLimit?: number;
     tagCloud?: boolean;
     announcement?: boolean;
   };
@@ -53,6 +54,7 @@ const showRecentMoments = config.recentMoments === true;
 const showRandomPosts = config.randomPosts === true;
 const showTagCloud = config.tagCloud === true;
 const showAnnouncement = config.announcement === true;
+const randomPostsLimit = Math.max(1, Math.floor(config.randomPostsLimit ?? 3));
 
 const normalizedCardOrder = normalizeRightSidebarCardOrder(config.order);
 
@@ -66,17 +68,15 @@ const latestMoments = moments.slice(0, 1).map((moment) => ({
     .trim(),
 }));
 
-const sampledPost = showRandomPosts ? sample(posts) : undefined;
-const shuffledPosts = sampledPost
-  ? [
-      {
-        id: sampledPost.id,
-        href: `/posts/${sampledPost.id}/`,
-        title: sampledPost.data.title,
-        description:
-          sampledPost.data.description || String(sampledPost.body || ""),
-      },
-    ]
+const shuffledPosts = showRandomPosts
+  ? shuffle(posts)
+      .slice(0, randomPostsLimit)
+      .map((post) => ({
+        id: post.id,
+        href: `/posts/${post.id}/`,
+        title: post.data.title,
+        description: post.data.description || String(post.body || ""),
+      }))
   : [];
 
 function formatMomentDate(date: Date): string {

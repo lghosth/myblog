@@ -87,11 +87,11 @@ export default defineConfig({
   },
 
   home: {
-    selectedCategories: [{ name: "Tutorial" }, { name: "Frontend" }, { name: "测试" }],
+    selectedCategories: [],
     pageSize: 5,
     title: {
-      behavior: "default",
-      customTitle: "",
+      behavior: "custom",
+      customTitle: "Charol的博客",
     },
   },
 
@@ -103,6 +103,7 @@ export default defineConfig({
       calendar: true,
       recentMoments: true,
       randomPosts: true,
+      randomPostsLimit: 3,
       tagCloud: true,
     },
   },
@@ -113,7 +114,7 @@ export default defineConfig({
       name: "sakura rotate",
       color: "var(--color-pink)",
     },
-    count: true,
+    count: false,
     powered: true,
     icp: {
       enable: false,
@@ -126,7 +127,7 @@ export default defineConfig({
   },
 
   widgets: {
-    randomPosts: true,
+    randomPosts: false,
     recentComments: false,
   },
 
