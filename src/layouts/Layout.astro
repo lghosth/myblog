@@ -26,6 +26,7 @@ import TwoColumnLayout from "@/layouts/TwoColumnLayout.astro";
 import ThreeColumnLayout from "@/layouts/ThreeColumnLayout.astro";
 import { generateTagCloud } from "@/toolkit/posts/generateTagCloud";
 import { createWidgetPosts } from "@/toolkit/posts/createWidgetPosts";
+import { buildCanonicalTags } from "@/toolkit/posts/tags";
 import { toTagHref } from "@/toolkit/posts/url";
 import Footer from "@/components/footer/Footer.astro";
 import type { ImageMetadata } from "astro";
@@ -102,33 +103,24 @@ const moments = shouldComputeRightSidebarRecentMoments
 const rightSidebarPosts = shouldComputeRightSidebarRandomPosts
   ? posts.filter((post) => !post.data.encrypted)
   : [];
+const canonicalTags = buildCanonicalTags(posts);
 const rightSidebarTagCloud = shouldComputeRightSidebarTagCloud
-  ? (() => {
-      const rightSidebarTagCounts = posts.reduce((acc, post) => {
-        post.data.tags?.forEach((tag) => {
-          acc.set(tag, (acc.get(tag) || 0) + 1);
-        });
-
-        return acc;
-      }, new Map<string, number>());
-
-      return generateTagCloud(
-        Array.from(rightSidebarTagCounts.entries()).map(([name, count]) => ({
-          name,
-          count,
-        })),
-        {
-          minFontSize: 12,
-          maxFontSize: 20,
-          startColor: tagCloudConfig.startColor,
-          endColor: tagCloudConfig.endColor,
-          limit: 16,
-        },
-      ).map((tag) => ({
-        ...tag,
-        href: toTagHref(tag.name),
-      }));
-    })()
+  ? generateTagCloud(
+      canonicalTags.map((tag) => ({
+        name: tag.displayName,
+        count: tag.count,
+      })),
+      {
+        minFontSize: 12,
+        maxFontSize: 20,
+        startColor: tagCloudConfig.startColor,
+        endColor: tagCloudConfig.endColor,
+        limit: 16,
+      },
+    ).map((tag) => ({
+      ...tag,
+      href: toTagHref(tag.name),
+    }))
   : [];
 
 const siteState = {
@@ -137,10 +129,7 @@ const siteState = {
     return acc;
   }, new Set()).size,
   posts: posts.length,
-  tags: allPosts.reduce((acc, post) => {
-    post.data.tags?.forEach((tag) => acc.add(tag));
-    return acc;
-  }, new Set()).size,
+  tags: canonicalTags.length,
 };
 
 const widgetPosts = createWidgetPosts(posts);

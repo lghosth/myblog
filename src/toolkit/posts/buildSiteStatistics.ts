@@ -1,4 +1,5 @@
 import type { Post } from "@/toolkit/posts/types";
+import { buildCanonicalTags } from "./tags";
 
 export interface CountItem {
   name: string;
@@ -41,7 +42,10 @@ export function buildSiteStatistics(
 
   const monthlyMap = new Map<string, number>();
   const categoryMap = new Map<string, number>();
-  const tagMap = new Map<string, number>();
+  const tagCounts = buildCanonicalTags(publishedPosts).map((tag) => ({
+    name: tag.displayName,
+    count: tag.count,
+  }));
 
   publishedPosts.forEach((post) => {
     const date = post.data.date;
@@ -52,10 +56,6 @@ export function buildSiteStatistics(
 
     (post.data.categories || []).forEach((category) => {
       categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
-    });
-
-    (post.data.tags || []).forEach((tag) => {
-      tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
     });
   });
 
@@ -72,7 +72,6 @@ export function buildSiteStatistics(
     .sort((a, b) => a.year - b.year || a.month - b.month);
 
   const categoryCounts = sortCountItems(categoryMap);
-  const tagCounts = sortCountItems(tagMap);
 
   return {
     totalPosts: publishedPosts.length,

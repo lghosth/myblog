@@ -1,43 +1,41 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import { toCategoryHref, toPostHref, toTagSlug } from "@/toolkit/posts/url";
+import {
+  buildCanonicalTags,
+  postHasTagSlug,
+} from "@/toolkit/posts/tags";
+import { toCategoryHref, toPostHref } from "@/toolkit/posts/url";
 import { t } from "@/i18n";
 import "../../styles/collapse.css";
 
 export async function getStaticPaths() {
   const allPosts = await getCollection("posts");
   const publishedPosts = allPosts.filter((post) => !post.data.draft);
+  const canonicalTags = buildCanonicalTags(publishedPosts);
 
-  // Collect all unique tags
-  const tagSet = new Set<string>();
-  publishedPosts.forEach((post) => {
-    const tags = post.data.tags || [];
-    tags.forEach((tag) => tagSet.add(tag));
-  });
-
-  // Generate paths for each tag
-  return Array.from(tagSet).map((tag) => ({
-    params: { tag: toTagSlug(tag) },
-    props: { tag },
+  return canonicalTags.map((tag) => ({
+    params: { tag: tag.slug },
+    props: {
+      slug: tag.slug,
+      displayName: tag.displayName,
+    },
   }));
 }
 
 interface Props {
-  tag: string;
+  slug: string;
+  displayName: string;
 }
 
-const { tag } = Astro.props;
+const { slug, displayName } = Astro.props;
 
 // Get all published posts
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
 // Filter posts that have this tag
-const postsWithTag = publishedPosts.filter((post) => {
-  const tags = post.data.tags || [];
-  return tags.includes(tag);
-});
+const postsWithTag = publishedPosts.filter((post) => postHasTagSlug(post, slug));
 
 // Sort posts by date descending (newest first)
 const sortedPosts = postsWithTag.sort(
@@ -58,13 +56,13 @@ function getLastCategory(categories: string[]): string | undefined {
 }
 ---
 
-<Layout pageTitle={tag}>
+<Layout pageTitle={displayName}>
   <div class="wrap">
     <div class="timeline">
       <h2 class="item header">
         <a href="/tags/">{t("tags.allTags")}</a>
         <small>/</small>
-        {tag}
+        {displayName}
         <small>{t("tags.tagged")}</small>
       </h2>
 

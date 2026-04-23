@@ -56,7 +56,7 @@ export default defineConfig({
   footer: {
     since: 2026,
     icp: {
-        enable: false,
+      enable: false,
     },
   },
 

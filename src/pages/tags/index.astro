@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { generateTagCloud } from "@/toolkit/posts/generateTagCloud";
+import { buildCanonicalTags } from "@/toolkit/posts/tags";
 import { toTagHref } from "@/toolkit/posts/url";
 import { t } from "@/i18n";
 import themeConfig from "@/theme.config";
@@ -11,35 +12,22 @@ import "../../styles/tags.css";
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-// Collect all tags with their counts
-interface TagCount {
-  name: string;
-  count: number;
-}
-
-const tagMap = new Map<string, number>();
-
-publishedPosts.forEach((post) => {
-  const tags = post.data.tags || [];
-  tags.forEach((tag) => {
-    tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
-  });
-});
-
-// Convert to array and generate tag cloud
-const tags: TagCount[] = Array.from(tagMap.entries()).map(([name, count]) => ({
-  name,
-  count,
-}));
+const canonicalTags = buildCanonicalTags(publishedPosts);
 
 // Generate tag cloud with colors and font sizes
-const tagCloud = generateTagCloud(tags, {
+const tagCloud = generateTagCloud(
+  canonicalTags.map((tag) => ({
+    name: tag.displayName,
+    count: tag.count,
+  })),
+  {
   minFontSize: 12,
   maxFontSize: 30,
   startColor: themeConfig.tagCloud?.startColor,
   endColor: themeConfig.tagCloud?.endColor,
   limit: 200,
-});
+  },
+);
 
 // Sort tag cloud alphabetically for display
 const sortedTagCloud = [...tagCloud].sort((a, b) =>
@@ -47,7 +35,7 @@ const sortedTagCloud = [...tagCloud].sort((a, b) =>
 );
 
 // Total tag count
-const totalTags = tags.length;
+const totalTags = canonicalTags.length;
 
 ---
 

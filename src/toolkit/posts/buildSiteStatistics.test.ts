@@ -85,13 +85,13 @@ describe("buildSiteStatistics", () => {
         id: "p1",
         date: "2025-03-01T00:00:00.000Z",
         categories: ["A", "B"],
-        tags: ["x", "y"],
+        tags: ["x", "MDX"],
       }),
       createPost({
         id: "p2",
         date: "2025-03-02T00:00:00.000Z",
         categories: ["A"],
-        tags: ["x"],
+        tags: ["X", "mdx"],
       }),
       createPost({
         id: "p3",
@@ -109,8 +109,8 @@ describe("buildSiteStatistics", () => {
       { name: "C", count: 1 },
     ]);
     expect(stats.tagCounts).toEqual([
-      { name: "x", count: 2 },
-      { name: "y", count: 1 },
+      { name: "MDX", count: 2 },
+      { name: "X", count: 2 },
       { name: "z", count: 1 },
     ]);
     expect(stats.totalCategories).toBe(3);
