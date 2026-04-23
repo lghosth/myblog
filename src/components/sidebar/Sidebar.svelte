@@ -133,6 +133,25 @@
     initMenuActive();
 
     let affixThreshold = 0;
+    let isSidebarOpen = false;
+    let bodyScrollLocked = false;
+    let previousBodyOverflow = "";
+
+    const updateBodyScrollLock = () => {
+      const shouldLock = isSidebarOpen && window.innerWidth < 1024;
+
+      if (shouldLock && !bodyScrollLocked) {
+        previousBodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        bodyScrollLocked = true;
+        return;
+      }
+
+      if (!shouldLock && bodyScrollLocked) {
+        document.body.style.overflow = previousBodyOverflow;
+        bodyScrollLocked = false;
+      }
+    };
 
     const updateAffixThreshold = () => {
       if (!sidebarElement || !innerElement) {
@@ -160,7 +179,13 @@
     const handleResize = () => {
       updateAffixThreshold();
       handleScroll();
+      updateBodyScrollLock();
     };
+
+    const unsubscribeSidebarLock = sidebarOpen.subscribe((open) => {
+      isSidebarOpen = open;
+      updateBodyScrollLock();
+    });
 
     updateAffixThreshold();
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -170,6 +195,10 @@
     handleScroll();
 
     return () => {
+      unsubscribeSidebarLock();
+      if (bodyScrollLocked) {
+        document.body.style.overflow = previousBodyOverflow;
+      }
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
     };
@@ -255,11 +284,18 @@
       display: none;
       position: fixed;
       right: 0;
+      top: 0;
+      bottom: 0;
       background: var(--grey-1);
       box-shadow: var(--shadow-sidebar-mobile);
       z-index: var(--z-sidebar);
       width: 280px;
-      height: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
     }
 
     #sidebar.on {
@@ -310,11 +346,21 @@
 
   @media (max-width: 1023px) {
     #sidebar > .inner {
+      margin-top: 0;
+      min-height: 100%;
       width: 100%;
     }
 
+    .panels {
+      min-height: auto;
+      overflow: visible;
+      padding-bottom: 5rem;
+    }
+
     .panels > .inner {
+      height: auto;
       margin-top: 0;
+      overflow: visible;
     }
   }
 
