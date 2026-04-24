@@ -1,10 +1,9 @@
 import type { ImageMetadata } from "astro";
 import type { CollectionEntry } from "astro:content";
-import { countWords } from "./calculateStats";
+import { calculateReadingMinutes, countWords, DEFAULT_WORDS_PER_MINUTE } from "./calculateStats";
 import { toCategoryHref, toPostHref } from "./url";
 
 const DEFAULT_EXCERPT_LENGTH = 300;
-const DEFAULT_WORDS_PER_MINUTE = 300;
 
 export interface TransformedIndexPost {
   title: string;
@@ -29,11 +28,7 @@ export function calculateReadTime(
   wordCount: number,
   wordsPerMinute: number = DEFAULT_WORDS_PER_MINUTE,
 ): number {
-  if (wordCount <= 0 || wordsPerMinute <= 0) {
-    return 0;
-  }
-
-  return Math.ceil(wordCount / wordsPerMinute);
+  return calculateReadingMinutes(wordCount, wordsPerMinute);
 }
 
 export function getExcerpt(

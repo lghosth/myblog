@@ -17,6 +17,7 @@ import type {
 import type { EncryptedData } from "@/toolkit/encryption/types";
 import { encryptContent } from "@/toolkit/encryption/crypto";
 import { createPostContentContainer } from "@/toolkit/posts/createPostContentContainer";
+import { countWords, calculateReadingMinutes } from "@/toolkit/posts/calculateStats";
 import { toPostHref, toTagHref } from "@/toolkit/posts/url";
 import { wrapRenderedCodeBlocks } from "@/toolkit/wrapRenderedCodeBlocks";
 import { wrapRenderedImages } from "@/toolkit/wrapRenderedImages";
@@ -190,14 +191,9 @@ const navigation: QuickNavigation = {
   nextTitle: nextPost?.title,
 };
 
-// Calculate word count from content
-const plainText = (post.body || "")
-  .replace(/[#*`_[\]()]/g, "")
-  .replace(/\s+/g, " ");
-const wordCount = plainText.length;
-
-// Calculate read time (assume 300 words per minute)
-const readTime = Math.ceil(wordCount / 300);
+// Calculate post stats with the same strategy as index cards.
+const wordCount = countWords(post.body || "");
+const readTime = calculateReadingMinutes(wordCount);
 
 // Get site info from config
 const siteConfig = themeConfig.sidebar || {};
@@ -375,6 +371,7 @@ const postMeta = {
           date={post.data.date}
           updated={post.data.updated}
           wordCount={wordCount}
+          readingTime={readTime}
         />
 
         {

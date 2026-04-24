@@ -4,7 +4,7 @@ date: 2025-12-07
 description: 这是一篇置顶文章示例,用于展示首页的置顶文章功能
 tags: [announcement, sticky]
 categories: [公告]
-sticky: true
+sticky: false
 draft: false
 ---
 

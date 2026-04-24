@@ -1,5 +1,6 @@
 ---
 import { currentLocale, t } from "@/i18n";
+import { calculateReadingMinutes } from "@/toolkit/posts/calculateStats";
 
 interface Props {
   title: string;
@@ -32,10 +33,7 @@ function formatFullDate(d: Date): string {
   });
 }
 
-// Calculate reading time (assuming 200 words per minute)
-const estimatedReadingTime = wordCount
-  ? Math.ceil(wordCount / 200)
-  : readingTime || 1;
+const estimatedReadingTime = readingTime ?? (wordCount ? calculateReadingMinutes(wordCount) : 1);
 ---
 
 <header>

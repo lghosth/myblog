@@ -5,6 +5,8 @@ export interface PostStats {
   totalReadingTime: string;
 }
 
+export const DEFAULT_WORDS_PER_MINUTE = 300;
+
 /**
  * Count words in a string
  * Supports multiple languages including Chinese
@@ -39,13 +41,27 @@ export function calculateTotalWords(posts: Post[]): number {
 }
 
 /**
- * Format reading time based on word count
- * Default AWL=150 (Chinese), WPM=300
+ * Calculate reading minutes based on word count.
  */
-export function formatReadingTime(wordCount: number, awl: number = 150, wpm: number = 300): string {
-  // For Chinese content, use AWL-based calculation
-  // For English content, use WPM calculation
-  const readingMinutes = Math.ceil(wordCount / ((awl + wpm) / 2));
+export function calculateReadingMinutes(
+  wordCount: number,
+  wordsPerMinute: number = DEFAULT_WORDS_PER_MINUTE,
+): number {
+  if (wordCount <= 0 || wordsPerMinute <= 0) {
+    return 0;
+  }
+
+  return Math.ceil(wordCount / wordsPerMinute);
+}
+
+/**
+ * Format reading time based on word count.
+ */
+export function formatReadingTime(
+  wordCount: number,
+  wordsPerMinute: number = DEFAULT_WORDS_PER_MINUTE,
+): string {
+  const readingMinutes = calculateReadingMinutes(wordCount, wordsPerMinute);
 
   if (readingMinutes === 0) {
     return "less than a minute";
@@ -62,13 +78,13 @@ export function formatReadingTime(wordCount: number, awl: number = 150, wpm: num
 export function calculatePostStats(
   posts: Post[],
   options: {
-    awl?: number;
+    wordsPerMinute?: number;
     wpm?: number;
     timeUnit?: "minute" | "minutes";
   } = {},
 ): PostStats {
   const totalWords = calculateTotalWords(posts);
-  const totalReadingTime = formatReadingTime(totalWords, options.awl, options.wpm);
+  const totalReadingTime = formatReadingTime(totalWords, options.wordsPerMinute ?? options.wpm);
 
   return {
     totalWords,

@@ -2,6 +2,7 @@ import type { Post } from "./types";
 import { describe, expect, it } from "bun:test";
 import {
   calculatePostStats,
+  calculateReadingMinutes,
   calculateTotalWords,
   countWords,
   formatReadingTime,
@@ -84,6 +85,19 @@ describe("calculateTotalWords", () => {
   });
 });
 
+describe("calculateReadingMinutes", () => {
+  it("should calculate reading minutes with ceil strategy", () => {
+    expect(calculateReadingMinutes(0)).toBe(0);
+    expect(calculateReadingMinutes(1)).toBe(1);
+    expect(calculateReadingMinutes(300)).toBe(1);
+    expect(calculateReadingMinutes(301)).toBe(2);
+  });
+
+  it("should use custom words per minute", () => {
+    expect(calculateReadingMinutes(200, 100)).toBe(2);
+  });
+});
+
 describe("formatReadingTime", () => {
   it('should return "less than a minute" for 0 words', () => {
     expect(formatReadingTime(0)).toBe("less than a minute");
@@ -94,12 +108,12 @@ describe("formatReadingTime", () => {
   });
 
   it("should return plural minutes for larger counts", () => {
-    expect(formatReadingTime(500)).toBe("3 minutes");
+    expect(formatReadingTime(500)).toBe("2 minutes");
   });
 
-  it("should use custom awl and wpm", () => {
-    expect(formatReadingTime(150, 150, 300)).toBe("1 minute");
-    expect(formatReadingTime(300, 150, 300)).toBe("2 minutes");
+  it("should use custom words per minute", () => {
+    expect(formatReadingTime(150, 300)).toBe("1 minute");
+    expect(formatReadingTime(300, 150)).toBe("2 minutes");
   });
 });
 
@@ -133,7 +147,7 @@ describe("calculatePostStats", () => {
         body: "hello world 你好",
       },
     ];
-    const stats = calculatePostStats(posts, { awl: 100, wpm: 200 });
+    const stats = calculatePostStats(posts, { wordsPerMinute: 200 });
     expect(stats.totalWords).toBe(4);
     expect(stats.totalReadingTime).toBe("1 minute");
   });
