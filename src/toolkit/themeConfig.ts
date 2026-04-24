@@ -524,6 +524,15 @@ interface CopyrightConfig {
   show?: boolean;
 }
 
+interface PostShareConfig {
+  /** 是否显示文章分享卡片 */
+  enable?: boolean;
+  /** 复制时是否包含文章标题 */
+  copyTitle?: boolean;
+  /** 是否启用二维码按钮 */
+  qrCode?: boolean;
+}
+
 export interface ShokaXThemeConfig {
   /**
    * 网站名称。
@@ -607,6 +616,12 @@ export interface ShokaXThemeConfig {
    * - 设置文章默认许可协议和版权声明显示
    */
   copyright?: CopyrightConfig;
+
+  /**
+   * 文章分享配置。
+   * - 控制文章底部复制链接与二维码分享卡片
+   */
+  postShare?: PostShareConfig;
 
   /**
    * 友链配置。

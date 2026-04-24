@@ -4,6 +4,7 @@ import Breadcrumb from "@/components/post/Breadcrumb.astro";
 import PostHeader from "@/components/post/PostHeader.astro";
 import PostFooter from "@/components/post/PostFooter.astro";
 import PostNav from "@/components/post/PostNav.astro";
+import PostShare from "@/components/post/PostShare.svelte";
 import AiSimilarPosts from "@/components/post/AiSimilarPosts.astro";
 import AiSummaryCard from "@/components/post/AiSummaryCard.astro";
 import WalineComments from "@/components/post/WalineComments.svelte";
@@ -201,6 +202,7 @@ const author = siteConfig.author || "Author";
 const siteName = themeConfig.siteName || "Site";
 const commentsConfig = themeConfig.comments || {};
 const walineConfig = commentsConfig.waline || {};
+const postShareConfig = themeConfig.postShare || {};
 
 const hycConfig = themeConfig.hyc || {};
 const aiRecommendConfig = hycConfig.aiRecommend || {};
@@ -436,6 +438,18 @@ const postMeta = {
           showReward={false}
           license={post.data.license}
         />
+
+        {
+          postShareConfig.enable !== false && (
+            <PostShare
+              client:idle
+              url={permalink}
+              title={post.data.title}
+              copyTitle={postShareConfig.copyTitle === true}
+              qrCode={postShareConfig.qrCode !== false}
+            />
+          )
+        }
       </article>
     </div>
 

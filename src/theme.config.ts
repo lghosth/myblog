@@ -159,6 +159,12 @@ export default defineConfig({
     show: true,
   },
 
+  postShare: {
+    enable: true,
+    copyTitle: false,
+    qrCode: true,
+  },
+
   visibilityTitle: {
     enable: true,
     leaveTitle: "先去忙吧，我在这里等你。",

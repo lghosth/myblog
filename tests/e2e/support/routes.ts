@@ -10,6 +10,7 @@ export const ROUTES = {
 } as const;
 
 export const POSTS = {
+  aiWorkflow: "/posts/ai-coding-workflow-terminal-tmux/",
   helloWorld: "/posts/hello-world/",
   gettingStarted: "/posts/getting-started/",
   encryptedTest: "/posts/encrypted-test/",
