@@ -83,6 +83,11 @@ export default defineConfig({
         icon: "i-ri-mail-line",
         color: "var(--color-red)",
       },
+      rss: {
+        url: "/rss.xml",
+        icon: "i-ri-rss-line",
+        color: "var(--color-orange)",
+      },
     },
   },
 

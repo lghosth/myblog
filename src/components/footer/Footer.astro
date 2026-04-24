@@ -121,6 +121,17 @@ const iconColor = sanitizeThemeColor(
         )
       }
 
+      <div class="feed-links block my-2 text-xs">
+        <a
+          href="/atom.xml"
+          rel="alternate"
+          type="application/atom+xml"
+          class="hover:opacity-80 border-b border-dashed"
+        >
+          Atom Feed
+        </a>
+      </div>
+
       <!-- ICP Section -->
       {
         config.icp?.enable && (

@@ -5,6 +5,8 @@ export const ROUTES = {
   moments: "/moments/",
   tags: "/tags/",
   categories: "/categories/",
+  rss: "/rss.xml",
+  atom: "/atom.xml",
 } as const;
 
 export const POSTS = {
