@@ -1,0 +1,419 @@
+---
+title: "我的 AI 编程工作流：从 IDE 到终端，再到 tmux 状态联动"
+date: 2026-04-24
+updated: 2026-04-24
+description: "记录我如何围绕 Codex、Claude Code 和 opencode 搭建终端优先的 AI 编程工作流，并用 tmux-ai-cli-status 优化多 AI CLI 的状态感知。"
+tags:
+  - AI 编程
+  - 工作流
+  - tmux
+  - Codex
+  - Claude Code
+  - opencode
+categories:
+  - 工作流
+draft: false
+sticky: true
+---
+
+最近一段时间，我的编程入口越来越多：编辑器、IDE 插件、Codex、Claude Code、opencode，以及各种围绕代码库展开的终端命令。工具变多以后，真正让我困扰的并不是“哪个模型更强”，而是另一个更基础的问题：这些工具应该被放进怎样的工作流里？
+
+如果每个工具都要求我切换到不同的界面、不同的快捷键和不同的会话模型，那 AI 编程带来的效率很快会被上下文切换抵消。所以我开始重新整理自己的工作台：编辑器可以换，AI CLI 可以换，但承载这些任务的底层环境最好稳定下来。
+
+这篇文章是这个系列的第一篇，主要记录我为什么选择终端优先的 AI 编程方式，以及如何用 tmux 把 Codex、Claude Code 和 opencode 的状态显示到窗口标签里。
+
+<Note type="info" title="本文定位">
+  这不是某个 AI CLI 的使用教程，也不是 tmux 从零入门，而是一次工作流拆解：从需求分析，到终端复用软件选择，再到状态栏联动的实现思路。
+</Note>
+
+<Note type="info" title="相关仓库">
+  文中提到的配置和脚本已经整理在公开仓库里：<a href="https://github.com/lghosth/dotfiles" target="_blank" rel="noopener noreferrer">dotfiles</a>
+  记录我的日常配置，<a href="https://github.com/lghosth/tmux-ai-cli-status" target="_blank" rel="noopener noreferrer">tmux-ai-cli-status</a>
+  抽出了可复用的 tmux 状态联动脚本。如果这些内容对你有帮助，也欢迎顺手点一个小小的 Star。
+</Note>
+
+## 问题不是工具太少，而是入口太多
+
+AI 编程工具的变化速度很快。今天可能主要用 Codex 改代码，明天可能用 Claude Code 分析架构，另一个项目里又想试试 opencode。不同工具各有优势，但如果每个工具都绑定一个独立的工作环境，日常使用会变得很割裂。
+
+我实际遇到的问题通常是这些：
+
+- 一个仓库里同时开着编辑器、开发服务器、测试命令和多个 AI CLI。
+- AI 任务可能持续很久，中途还要切去看文档、跑构建、处理 Git diff。
+- 有的 AI CLI 正在生成，有的在等权限确认，有的已经空闲，但不切进去看就不知道。
+- IDE 插件体验很好，但会把部分工作流绑定到具体 IDE。
+- 远程机器、临时环境和本地机器之间，最好有一套能迁移的操作方式。
+
+所以我最后没有把问题定义成“选哪个 IDE”，而是定义成：我需要一个足够稳定、可恢复、可观察的 AI 编程工作台。
+
+## 为什么最后回到终端 CLI
+
+我仍然会使用图形编辑器或 IDE，但 AI 编程的主入口逐渐回到了终端。原因很直接：代码修改、命令执行、Git 操作、测试验证、日志排查，本来就围绕 shell 和项目目录展开。
+
+终端 CLI 的优势在于它不强绑定某个编辑器。只要进入项目目录，就可以启动对应的工具：
+
+```bash
+codex
+claude
+opencode
+```
+
+这让工作流有几个好处：
+
+- **工具可替换**：不同 AI CLI 可以共存，不需要围绕某一个 IDE 插件重新组织项目。
+- **上下文自然**：当前 shell 的目录、环境变量、Git 状态和测试命令都在同一个地方。
+- **远程友好**：SSH 到服务器后，仍然可以用同一套会话管理方式。
+- **自动化简单**：shell 脚本、hook、tmux 配置都可以直接参与工作流。
+
+但终端 CLI 也有明显短板：普通终端窗口不擅长管理长期任务。窗口一多，哪个 pane 是哪个项目、哪个 AI 正在忙、哪个任务已经结束，就会变得不清楚。
+
+于是下一个问题就变成了：用什么来承载这些终端任务？
+
+## 为什么选择 tmux 做任务调度层
+
+终端复用软件有很多选择。现代终端模拟器通常自带 tab 和 split，IDE 也有内置 terminal，Zellij 这类工具默认体验也很好。但我最后还是选择 tmux，主要是因为它更像一个可脚本化的任务调度层。
+
+对我的 AI 编程工作流来说，tmux 解决了几个关键需求：
+
+- session/window/pane 模型清晰，适合把一个项目拆成多个任务区域。
+- SSH 断开或终端关闭后，会话仍然可以保留。
+- 新窗口和新 pane 可以继承当前目录，适合围绕同一个 repo 展开工作。
+- window name、status bar、hook 都可以脚本化，方便接入 AI CLI 状态。
+- 配置可以放进 dotfiles，在不同机器之间复用。
+- TPM、resurrect、continuum、yank 等插件能补齐日常体验。
+
+我对 tmux 的定位不是“更酷的终端”，而是 AI 编程任务的调度层。编辑器、AI CLI、测试命令和日志都只是 pane 里的进程；tmux 负责把它们组织成可恢复、可切换、可观察的工作台。
+
+## 先把 tmux 工作台打稳
+
+在接入 AI CLI 状态之前，我先整理了一套基础 tmux 配置。这部分不是为了炫技，而是为了减少 AI 编程时的摩擦。
+
+首先是长输出。AI CLI 经常输出很长的分析、diff 或命令日志，所以回滚缓冲区需要足够大：
+
+```text
+set -g history-limit 500000
+```
+
+其次是路径继承。一个项目中经常需要临时开 pane 跑测试、看日志或启动另一个 AI CLI，如果每次都要手动 `cd` 会非常烦：
+
+```text
+bind c new-window -c "#{pane_current_path}"
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+```
+
+然后是普通窗口自动命名。普通 shell 显示目录名，正在运行程序时显示程序名：
+
+```text
+set -g automatic-rename on
+set -g automatic-rename-format '#{?#{==:#{pane_current_command},bash},#{=24:#{b:pane_current_path}},[#{pane_current_command}]}'
+```
+
+这个配置本身已经能提升可读性，但 AI CLI 的状态不是一个进程名能表达的。比如 `codex` 可能正在生成，也可能在等权限，还可能已经回到空闲。单纯显示 `[codex]` 不够。
+
+最后是会话恢复。我用了 `tmux-resurrect` 和 `tmux-continuum`，但关闭 pane 内容持久化：
+
+```text
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @resurrect-capture-pane-contents 'off'
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'
+```
+
+AI 输出很长，完整保存 pane 内容会让恢复文件变得臃肿。对我来说，tmux 负责恢复布局和工作台即可，AI 对话和代码上下文则交给对应工具和项目本身。
+
+## 多 AI CLI 带来的状态不可见问题
+
+当 Codex、Claude Code 和 opencode 都开始进入日常工作流后，新的问题出现了：tmux 能保留会话，但不能天然知道 AI CLI 当前在做什么。
+
+我希望窗口列表直接告诉我这些信息：
+
+- 这个 window 里跑的是哪个 AI CLI。
+- 它对应哪个项目目录。
+- 它现在是空闲、生成中，还是在等我处理权限。
+
+最终我想要的效果大概是这样：
+
+| 状态 | Codex | Claude Code | opencode |
+| --- | --- | --- | --- |
+| 空闲/启动 | <code>[codex&#58;repo]</code> | <code>[claude&#58;repo]</code> | <code>[opencode&#58;repo]</code> |
+| 思考/生成/工具中 | <code>◈ [codex&#58;repo]</code> | <code>✻ [claude&#58;repo]</code> | <code>⬡ [opencode&#58;repo]</code> |
+| 权限/等待确认 | <code>!! [codex&#58;repo]</code> | <code>!! [claude&#58;repo]</code> | 不使用 |
+
+这里有一个小细节：权限态我没有使用 `⚠️` 这类 emoji，而是用了 `!!`。原因很朴素，某些 emoji 可能导致 tmux 底部状态栏行高变化，实际体验会很别扭。状态栏里的符号应该稳定、克制，不应该为了好看影响布局。
+
+## tmux-ai-cli-status 的整体设计
+
+最直接的实现方式是写 wrapper：把 `codex`、`claude`、`opencode` 都包一层，启动时改窗口名，退出时恢复。这个方案看起来简单，但我最后放弃了。
+
+wrapper 的问题是侵入性比较强：
+
+- 需要维护真实 binary 路径。
+- CLI 升级后入口可能变化。
+- 异常退出、嵌套调用、环境变量透传都要处理。
+- 状态显示逻辑会和启动逻辑绑在一起。
+
+我更想要的是事件驱动：让各个 AI CLI 用自己的 hook 或 plugin 告诉 tmux 当前发生了什么，再由一个统一脚本负责更新窗口标签。
+
+现在的结构是这样的：
+
+```text
+Codex hooks         ┐
+Claude Code hooks   ├─> ai-cli-status-hook.sh ─> tmux rename-window
+opencode plugin     ┘
+```
+
+也就是说，Codex、Claude Code 和 opencode 的事件入口不同，但最终都会调用同一个脚本：
+
+```bash
+~/.config/tmux/scripts/ai-cli-status-hook.sh codex
+~/.config/tmux/scripts/ai-cli-status-hook.sh claude
+~/.config/tmux/scripts/ai-cli-status-hook.sh opencode
+```
+
+这个方案的好处是状态逻辑可以复用。以后如果要接入 Gemini 或其他 CLI，只要把它们的事件映射到同一套状态即可。
+
+<Note type="success" title="设计原则">
+  状态显示不应该变成新的启动器。能用官方 hook/plugin 就用官方 hook/plugin，只有确实拿不到 tmux 环境时，才保留最小 wrapper 兜底。
+</Note>
+
+## tmux 初始化：把配置做成可重复安装
+
+为了避免每次手动复制 tmux 片段，我把 tmux 侧配置做成了一个初始化脚本：`ai-cli-tmux-init.sh`。
+
+它默认管理两个文件：
+
+```bash
+~/.config/tmux/tmux.conf
+~/.config/tmux/conf.d/ai-cli-status.conf
+```
+
+主配置只追加一个 source block，真正的 AI CLI 状态配置写到独立的 managed file 中：
+
+```bash
+managed_config="${AI_CLI_TMUX_STATUS_CONF:-$tmux_config_dir/conf.d/ai-cli-status.conf}"
+source_line="source-file -q \"$managed_config\""
+```
+
+这样做有几个好处：
+
+- 初始化脚本可以幂等执行。
+- 主 `tmux.conf` 不会被大段脚本污染。
+- 后续更新只需要重写 managed config。
+- 如果 tmux server 已经运行，可以自动 reload。
+
+managed config 里主要做两件事。第一，切到 Claude Code 或 opencode pane 时给边框加一点颜色提示；第二，配置懒清理 hook：
+
+```text
+set-hook -g pane-focus-in "... run-shell -b 'ai-cli-restore-if-stale.sh \"#{pane_id}\"'"
+set-hook -g window-pane-changed "run-shell -b 'ai-cli-restore-if-stale.sh \"#{pane_id}\"'"
+set-hook -g pane-exited "run-shell -b 'ai-cli-restore-if-stale.sh \"#{window_id}\"'"
+set-hook -g pane-died "run-shell -b 'ai-cli-restore-if-stale.sh \"#{window_id}\"'"
+```
+
+状态变化靠 AI CLI 的 hook 触发，异常残留靠 tmux 侧懒清理修正。二者分工清晰，配置也比较容易维护。
+
+## 关键实现一：定位真正触发事件的 pane
+
+`ai-cli-status-hook.sh` 的第一个关键点，是不能简单改“当前焦点窗口”。AI CLI 触发 hook 时，我可能已经切到另一个 pane 或 window 了。如果这时按当前焦点改名，就会改错地方。
+
+所以脚本优先读取 `TMUX_PANE`：
+
+```bash
+pane_target="${TMUX_PANE:-}"
+```
+
+如果没有 `TMUX_PANE`，再尝试用当前 tty 反查 tmux pane：
+
+```bash
+pane_tty="$(tty 2>/dev/null || true)"
+pane_target="$(tmux list-panes -a -F '#{pane_id} #{pane_tty}' \
+  | awk -v tty="$pane_tty" '$2 == tty { print $1; exit }')"
+```
+
+拿到 pane 后，再通过 tmux format 找到对应的 `window_id`：
+
+```bash
+win_id="$(display_for_pane '#{window_id}')"
+```
+
+这里我更倾向使用 `window_id`，而不是窗口序号，因为窗口序号可能随着重排变化，`window_id` 更适合作为脚本 target。
+
+## 关键实现二：把事件映射成窗口标签
+
+统一脚本从 stdin 读取事件 JSON，并兼容不同命名风格：
+
+```bash
+input="$(cat)"
+event="$(jq -r '.hook_event_name // .hookEventName // empty' <<<"$input")"
+tool_name="$(jq -r '.tool_name // .toolName // empty' <<<"$input")"
+```
+
+然后根据 CLI 和状态选择图标：
+
+```bash
+case "$state" in
+  busy)
+    case "$cli" in
+      claude) icon="✻ " ;;
+      codex) icon="◈ " ;;
+      opencode) icon="⬡ " ;;
+    esac
+    ;;
+  attention)
+    icon="!! "
+    ;;
+esac
+```
+
+目录名来自触发 pane 的当前路径最后一级，并做截断：
+
+```bash
+pane_path="$(display_for_pane '#{pane_current_path}')"
+pane_dir="${pane_path%/}"
+pane_dir="${pane_dir##*/}"
+[[ ${#pane_dir} -le 10 ]] || pane_dir="${pane_dir:0:7}..."
+```
+
+真正改名时，需要先关闭 tmux 的自动命名，否则 tmux 可能马上把窗口名改回默认格式：
+
+```bash
+tmux set-option -w -t "$win_id" automatic-rename off
+tmux set-option -w -t "$win_id" allow-rename off
+tmux rename-window -t "$win_id" "${icon}[${cli}:${pane_dir}]"
+```
+
+这一步让 AI CLI 在运行期间临时接管窗口标签。等会话结束或需要恢复时，再把 `automatic-rename` 和 `allow-rename` 打开。
+
+## 关键实现三：事件分发和状态机
+
+状态机本身不复杂，但要足够克制。我目前只关心三类状态：idle、busy、attention。
+
+通用事件：
+
+```text
+SessionStart -> idle label
+SessionEnd   -> 恢复 tmux 自动命名
+```
+
+忙碌状态：
+
+```text
+UserPromptSubmit -> busy
+PreToolUse       -> busy
+PostToolUse      -> busy
+```
+
+等待用户处理：
+
+```text
+PermissionRequest -> attention
+Elicitation       -> attention
+PermissionDenied  -> attention
+```
+
+结束状态：
+
+```text
+Stop        -> idle label
+StopFailure -> 恢复 tmux 自动命名
+```
+
+这里有一个有意的设计：`Stop` 不直接恢复普通窗口名，而是回到 <code>[cli&#58;dir]</code>。这样我能知道这个 window 仍然是某个 AI CLI 会话，只是当前空闲。真正退出会话时，才恢复 tmux 自动命名。
+
+## 关键实现四：懒清理残留标签
+
+不用 wrapper 的代价是：异常退出或 `Ctrl+C` 不一定能瞬间恢复窗口名。
+
+我接受这个限制，但需要一个轻量兜底。`ai-cli-restore-if-stale.sh` 的逻辑是：当某些 tmux hook 被触发时，检查当前 window 名是否像 AI 标签；如果像，就扫描同一 window 下所有 pane 的 tty 进程，看看是否还有 AI CLI 存活。
+
+核心检查大致是这样：
+
+```bash
+process_text="$(tmux list-panes -t "$win_id" -F '#{pane_tty}' \
+  | while IFS= read -r pane_tty; do
+      ps -t "$pane_tty" -o comm= -o args= 2>/dev/null || true
+    done)"
+```
+
+如果没有发现 `codex`、`claude` 或 `opencode` 相关进程，就恢复自动命名：
+
+```bash
+tmux set-option -w -t "$win_id" allow-rename on
+tmux set-option -w -t "$win_id" automatic-rename on
+```
+
+这个策略不是实时的，但足够实用。它不会侵入 CLI 启动命令，也不需要常驻轮询。只要我切换 pane、切换 window，或者关闭 pane，就有机会顺手清理过期标签。
+
+## opencode 的特殊处理
+
+Codex 和 Claude Code 可以直接通过官方 hook 调用统一脚本，opencode 则多了一层插件。原因是 opencode 插件运行环境有时拿不到 tmux 环境变量。
+
+插件里获取 tmux 环境的顺序是：
+
+```js
+let tmux = process.env.TMUX || process.env.OPENCODE_TMUX;
+let tmuxPane = process.env.TMUX_PANE || process.env.OPENCODE_TMUX_PANE;
+```
+
+如果还拿不到，就尝试读取一个临时兜底文件：
+
+```js
+const fallback = JSON.parse(readFileSync(`/tmp/opencode-tmux-env-${uid}.json`, "utf8"));
+tmux = fallback.tmux || "";
+tmuxPane = fallback.tmuxPane || "";
+```
+
+这也是为什么我当前仍然为 opencode 保留一个很轻的 wrapper：它只负责注入 `OPENCODE_TMUX` / `OPENCODE_TMUX_PANE`，以及写入兜底文件，不负责状态机本身。
+
+opencode 插件再把自己的事件转换成统一脚本能理解的事件，比如：
+
+- `session.created` → idle
+- `session.idle` → idle
+- `session.status` → idle 或 busy
+- `message.updated` → busy
+- `tool.execute.before` → `PreToolUse`
+- `tool.execute.after` → `PostToolUse`
+
+另外我加了一个很小的防抖，避免 idle 刚出现又马上 busy 时窗口标签闪烁：
+
+```js
+if (idleSince && Date.now() - idleSince < 750) return;
+```
+
+## 最终效果：窗口列表变成 AI 任务看板
+
+接入之后，tmux 的窗口列表会更接近一个任务看板：
+
+```text
+1: astro-blog
+2: ◈ codex:astro-b...
+3: !! claude:tmux-ai...
+4: opencode:dotfiles
+```
+
+这带来的体验变化很明显：我不用切进窗口就能知道哪个 AI CLI 正在生成、哪个在等权限、哪个已经空闲。对多项目、多 pane、多 AI CLI 并行的场景来说，这个状态提示比它看起来更重要。
+
+它也让我更愿意把 AI CLI 当作普通终端任务来组织，而不是把每个工具都看成一个独立工作空间。
+
+## 当前限制与取舍
+
+这套方案不是完美状态机，我也不打算把它做得过重。当前我明确接受这些限制：
+
+- 不使用 Codex/Claude wrapper，所以异常退出不能保证瞬间恢复。
+- 同一 window 里多个 pane 同时跑 AI CLI，会竞争同一个 window label。
+- Codex 启动标签依赖它是否及时发出 `SessionStart`。
+- opencode 插件依赖 Bun runtime，未来运行时变化可能需要调整。
+- tmux socket 权限受限时，hook 脚本可能无法改名。
+- 统一脚本用 `cat` 读取 stdin，如果调用方没有关闭 stdin 可能阻塞；Codex/Claude 侧可以通过 hook timeout 兜底。
+
+我接受这些限制，是因为这套方案的目标不是完整监控 AI 进程，而是用最少侵入获得足够可靠的状态感知。
+
+## 小结：先稳定工作台，再优化工作流
+
+这一篇解决的是底层工作台问题：为什么我把 AI 编程主入口放回终端，为什么用 tmux 管理会话，以及如何把多个 AI CLI 的状态显示到 tmux window label 上。
+
+当 AI CLI 变成日常工具之后，我最需要的不是更多按钮，而是一个能稳定承载它们的工作台。tmux 在这里扮演的角色，就是把分散在各个 pane 里的 AI 任务组织起来，让它们变得可恢复、可切换、可观察。
+
+后续我还想继续整理这个系列的其他部分，比如：Codex、Claude Code 和 opencode 在实际项目中的分工；如何让 AI 修改代码后进入验证闭环；以及如何把博客写作、文档整理和代码开发放进同一套终端工作流里。
