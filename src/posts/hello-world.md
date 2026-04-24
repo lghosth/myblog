@@ -5,7 +5,7 @@ description: This is the first post on the ShokaX blog. Welcome to our new Astro
 tags: [welcome, astro, shokaX]
 categories: [Getting Started]
 cover: ../assets/images/cover-1.avif
-draft: false
+draft: true
 ---
 
 This is the initial hello world post to demonstrate the blog structure. You can now start creating your own posts in the `src/posts/` directory.

@@ -5,7 +5,7 @@ updated: 2025-12-12
 description: 这是一篇用于测试 Post 页面所有功能的完整文章，包含了面包屑、标签、分类、版权等各种元素
 tags: [测试, Astro, ShokaX, 迁移]
 categories: [开发, 测试]
-draft: false
+draft: true
 ---
 
 ## 欢迎来到新的 Post 页面

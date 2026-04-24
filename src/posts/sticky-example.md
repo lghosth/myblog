@@ -5,7 +5,7 @@ description: 这是一篇置顶文章示例,用于展示首页的置顶文章功
 tags: [announcement, sticky]
 categories: [公告]
 sticky: false
-draft: false
+draft: true
 ---
 
 这是一篇置顶文章的示例内容。置顶文章会显示在首页的最上方,在分类卡片之前。

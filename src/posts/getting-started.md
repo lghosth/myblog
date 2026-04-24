@@ -5,7 +5,7 @@ description: Learn how to set up and use the ShokaX theme for Astro
 tags: [tutorial, guide, astro]
 categories: [Getting Started, Tutorial]
 cover: ../assets/images/cover-2.avif
-draft: false
+draft: true
 ---
 
 ShokaX is a modern, responsive blog theme built with Astro and Svelte. This post will guide you through the setup process and basic customization options.

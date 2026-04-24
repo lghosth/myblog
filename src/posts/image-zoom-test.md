@@ -4,7 +4,7 @@ date: 2026-03-29
 description: 用于验证文章图片点击放大与预览关闭交互。
 tags: [test, image, svelte]
 categories: [Testing]
-draft: false
+draft: true
 ---
 
 这是一篇用于验证文章内图片点击放大效果的测试文章。

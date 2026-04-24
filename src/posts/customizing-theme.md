@@ -3,7 +3,7 @@ title: Explore the various customization options available in ShokaX theme confi
 date: 2025-12-04
 tags: [customization, config, styling]
 categories: [Advanced, Tutorial]
-draft: false
+draft: true
 ---
 
 # remark 插件综合测试文档
