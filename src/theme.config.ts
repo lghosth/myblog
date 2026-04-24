@@ -138,7 +138,15 @@ export default defineConfig({
   friends: {
     title: "友链",
     description: "这里会放一些常读、常用或互相交换的站点。",
-    links: [],
+    links: [
+      {
+        url: "https://blog.rimuru.work/",
+        title: "Rimuru's Blog",
+        desc: "分享 DevOps、AI 工具、Linux 运维及游戏攻略。",
+        author: "Rimuru",
+        avatar: "/avatar/friend-avatart-rimuru.png",
+      },
+    ],
   },
 
   copyright: {

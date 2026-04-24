@@ -31,6 +31,10 @@ const friendsJson = JSON.stringify(friendsSnippet, null, 2);
       <h2>{pageTitle}</h2>
       <p>{pageDescription}</p>
     </div>
+    <section class="friend-section friend-links-section">
+      <h3>友链列表</h3>
+      <FriendLinks links={friendLinks} />
+    </section>
     <section class="friend-section friend-rules">
       <h3>友链规则</h3>
       <div class="friend-rules-content">
@@ -48,10 +52,6 @@ const friendsJson = JSON.stringify(friendsSnippet, null, 2);
           class="friend-code"
         />
       </code-block>
-    </section>
-    <section class="friend-section friend-links-section">
-      <h3>友链列表</h3>
-      <FriendLinks links={friendLinks} />
     </section>
   </div>
 </Layout>
