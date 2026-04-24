@@ -13,6 +13,7 @@
     "check-links": "lychee ./dist --root-dir ./dist --offline --exclude favicon.svg --cache",
     "lint": "bunx --bun oxlint --type-aware --type-check . --fix",
     "format": "bunx oxfmt .",
+    "images:publish": "bun run scripts/publish-images.ts",
     "test": "bun run test:unit",
     "test:unit": "bun test src",
     "e2e:smoke": "bunx playwright test --grep @smoke",

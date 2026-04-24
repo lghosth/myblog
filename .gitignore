@@ -33,6 +33,8 @@ hyacine.code-workspace
 generated/
 .hyacine
 .claude
+.local-drafts/
+.local-assets/
 
 test-results/
 playwright-report/
