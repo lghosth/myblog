@@ -164,6 +164,7 @@ function formatWordCount(count: number): string {
     isolation: isolate;
     width: min(72rem, calc(100vw - 2rem));
     padding: clamp(0.75rem, 2vw, 1.25rem) clamp(1rem, 3vw, 2.75rem);
+    color: oklch(0.985 0 0);
   }
 
   .page-brand::before {
@@ -185,6 +186,7 @@ function formatWordCount(count: number): string {
   }
 
   .page-brand h1 {
+    color: inherit;
     max-width: 100%;
     text-wrap: balance;
     overflow-wrap: anywhere;
@@ -194,7 +196,7 @@ function formatWordCount(count: number): string {
   }
 
   .page-brand .meta {
-    color: var(--grey-0);
+    color: oklch(0.92 0 0 / 0.96);
     opacity: 0.96;
     text-shadow:
       0 0.1rem 0.45rem oklch(0 0 0 / 0.78),

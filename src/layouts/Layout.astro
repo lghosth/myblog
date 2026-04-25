@@ -161,40 +161,51 @@ import SearchPage from "@/components/search/SearchPage.svelte";
     <meta name="generator" content={Astro.generator} />
 
     {
-      googleAnalyticsId && (
-        <>
-          <script
-            is:inline
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
-          ></script>
-          <script is:inline define:vars={{ googleAnalyticsId }}>
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = function gtag() {
-              window.dataLayer.push(arguments);
-            };
-            window.gtag("js", new Date());
-            window.gtag("config", googleAnalyticsId);
-          </script>
-        </>
-      )
-    }
+      (googleAnalyticsId || clarityProjectId) && (
+        <script is:inline define:vars={{ googleAnalyticsId, clarityProjectId }}>
+          (() => {
+            const localHostnames = new Set([
+              "localhost",
+              "127.0.0.1",
+              "::1",
+              "0.0.0.0",
+            ]);
 
-    {
-      clarityProjectId && (
-        <script is:inline define:vars={{ clarityProjectId }}>
-          (function (c, l, a, r, i, t, y) {
-            c[a] =
-              c[a] ||
-              function () {
-                (c[a].q = c[a].q || []).push(arguments);
+            if (localHostnames.has(window.location.hostname)) {
+              return;
+            }
+
+            if (googleAnalyticsId) {
+              const gtagScript = document.createElement("script");
+              gtagScript.async = true;
+              gtagScript.src =
+                "https://www.googletagmanager.com/gtag/js?id=" +
+                encodeURIComponent(googleAnalyticsId);
+              document.head.appendChild(gtagScript);
+
+              window.dataLayer = window.dataLayer || [];
+              window.gtag = function gtag() {
+                window.dataLayer.push(arguments);
               };
-            t = l.createElement(r);
-            t.async = 1;
-            t.src = "https://www.clarity.ms/tag/" + i;
-            y = l.getElementsByTagName(r)[0];
-            y.parentNode.insertBefore(t, y);
-          })(window, document, "clarity", "script", clarityProjectId);
+              window.gtag("js", new Date());
+              window.gtag("config", googleAnalyticsId);
+            }
+
+            if (clarityProjectId) {
+              (function (c, l, a, r, i, t, y) {
+                c[a] =
+                  c[a] ||
+                  function () {
+                    (c[a].q = c[a].q || []).push(arguments);
+                  };
+                t = l.createElement(r);
+                t.async = 1;
+                t.src = "https://www.clarity.ms/tag/" + i;
+                y = l.getElementsByTagName(r)[0];
+                y.parentNode.insertBefore(t, y);
+              })(window, document, "clarity", "script", clarityProjectId);
+            }
+          })();
         </script>
       )
     }
