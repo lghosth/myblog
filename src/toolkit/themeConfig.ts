@@ -533,6 +533,28 @@ interface PostShareConfig {
   qrCode?: boolean;
 }
 
+interface AnalyticsConfig {
+  /**
+   * Google Analytics 4 配置。
+   */
+  googleAnalytics?: {
+    /** 是否启用 GA4 统计 */
+    enable?: boolean;
+    /** GA4 Measurement ID，例如 G-XXXXXXXXXX */
+    measurementId?: string;
+  };
+
+  /**
+   * Microsoft Clarity 配置。
+   */
+  clarity?: {
+    /** 是否启用 Clarity 统计与热力图 */
+    enable?: boolean;
+    /** Clarity Project ID */
+    projectId?: string;
+  };
+}
+
 export interface ShokaXThemeConfig {
   /**
    * 网站名称。
@@ -641,6 +663,11 @@ export interface ShokaXThemeConfig {
    * - 聚焦：显示 returnTitle，延迟 restoreDelay 后恢复原始标题
    */
   visibilityTitle?: VisibilityTitleConfig;
+
+  /**
+   * 站点统计配置。
+   */
+  analytics?: AnalyticsConfig;
 
   /**
    * HYC 扩展功能配置。

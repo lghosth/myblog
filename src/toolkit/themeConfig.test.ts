@@ -101,4 +101,26 @@ describe("themeConfig", () => {
     expect(config.diagnostics?.suppressFsWatcherMaxListenersWarning).toBe(false);
     expect(DEFAULT_THEME_CONFIG.diagnostics?.suppressFsWatcherMaxListenersWarning).toBe(true);
   });
+
+  it("keeps analytics disabled by default and allows analytics overrides", () => {
+    const config = defineConfig({
+      analytics: {
+        googleAnalytics: {
+          enable: true,
+          measurementId: "G-TEST12345",
+        },
+        clarity: {
+          enable: true,
+          projectId: "clarity-test-id",
+        },
+      },
+    });
+
+    expect(DEFAULT_THEME_CONFIG.analytics?.googleAnalytics?.enable).toBe(false);
+    expect(DEFAULT_THEME_CONFIG.analytics?.clarity?.enable).toBe(false);
+    expect(config.analytics?.googleAnalytics?.enable).toBe(true);
+    expect(config.analytics?.googleAnalytics?.measurementId).toBe("G-TEST12345");
+    expect(config.analytics?.clarity?.enable).toBe(true);
+    expect(config.analytics?.clarity?.projectId).toBe("clarity-test-id");
+  });
 });

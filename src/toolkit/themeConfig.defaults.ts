@@ -137,6 +137,16 @@ export const DEFAULT_THEME_CONFIG: ShokaXThemeConfig = {
     returnTitle: "🎉 欢迎回来！",
     restoreDelay: 3000,
   },
+  analytics: {
+    googleAnalytics: {
+      enable: false,
+      measurementId: "",
+    },
+    clarity: {
+      enable: false,
+      projectId: "",
+    },
+  },
   home: {
     selectedCategories: [{ name: "Tutorial" }, { name: "Frontend" }],
     pageSize: 5,

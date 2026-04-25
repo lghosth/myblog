@@ -172,6 +172,17 @@ export default defineConfig({
     restoreDelay: 2500,
   },
 
+  analytics: {
+    googleAnalytics: {
+      enable: true,
+      measurementId: "G-K3ECVP9V7W",
+    },
+    clarity: {
+      enable: true,
+      projectId: "wh7rpu7mxj",
+    },
+  },
+
   hyc: {
     enable: false,
   },

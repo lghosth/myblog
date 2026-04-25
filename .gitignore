@@ -33,6 +33,8 @@ hyacine.code-workspace
 generated/
 .hyacine
 .claude
+.codex
+AGENTS.md
 .local-drafts/
 .local-assets/
 
