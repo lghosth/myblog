@@ -1,0 +1,70 @@
+---
+import { Image } from "astro:assets";
+import type { ImageSource } from "@/toolkit/images/imageSource";
+import { isAstroImageMetadata } from "@/toolkit/images/imageSource";
+
+interface Props {
+  src?: ImageSource;
+  alt: string;
+  class?: string;
+  loading?: "eager" | "lazy";
+  decoding?: "async" | "auto" | "sync";
+  fetchpriority?: "high" | "low" | "auto";
+  priority?: boolean;
+  layout?: "constrained" | "fixed" | "full-width" | "none";
+  widths?: number[];
+  sizes?: string;
+  quality?: number;
+  format?: "avif" | "webp" | "png" | "jpg" | "jpeg";
+}
+
+const {
+  src,
+  alt,
+  class: className,
+  loading,
+  decoding,
+  fetchpriority,
+  priority,
+  layout,
+  widths,
+  sizes,
+  quality,
+  format,
+} = Astro.props;
+
+const isLocalAsset = isAstroImageMetadata(src);
+const localSrc = isLocalAsset ? src : undefined;
+const stringSrc = typeof src === "string" ? src : undefined;
+const localLoading = priority ? undefined : loading;
+const nativeLoading = priority ? "eager" : loading;
+---
+
+{
+  localSrc ? (
+    <Image
+      src={localSrc}
+      alt={alt}
+      class={className}
+      loading={localLoading}
+      decoding={decoding}
+      priority={priority}
+      layout={layout}
+      widths={widths}
+      sizes={sizes}
+      quality={quality}
+      format={format}
+    />
+  ) : (
+    stringSrc && (
+      <img
+        src={stringSrc}
+        alt={alt}
+        class={className}
+        loading={nativeLoading}
+        decoding={decoding}
+        fetchpriority={fetchpriority}
+      />
+    )
+  )
+}

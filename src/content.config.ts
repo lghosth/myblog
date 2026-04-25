@@ -7,8 +7,10 @@ const posts = defineCollection({
     pattern: "**/*.{md,mdx}",
     base: "src/posts",
   }),
-  schema: ({ image }) =>
-    z.object({
+  schema: ({ image }) => {
+    const imageSource = z.union([image(), z.url()]);
+
+    return z.object({
       title: z.string(),
       description: z.string().optional(),
       date: z.date().refine((date) => !Number.isNaN(date.getTime()), {
@@ -18,7 +20,7 @@ const posts = defineCollection({
       tags: z.array(z.string()).nullable().optional(),
       categories: z.array(z.string()).nullable().optional(),
       draft: z.boolean().optional(),
-      cover: image().optional(),
+      cover: imageSource.optional(),
       sticky: z.boolean().optional(),
       license: z
         .enum([
@@ -34,7 +36,8 @@ const posts = defineCollection({
       // 加密相关字段
       encrypted: z.boolean().default(false),
       password: z.string().optional(), // 构建时用于加密，不会输出到前端
-    }),
+    });
+  },
 });
 
 // 动态/说说集合
@@ -43,13 +46,16 @@ const moments = defineCollection({
     pattern: "**/*.{md,mdx}",
     base: "src/moments",
   }),
-  schema: ({ image }) =>
-    z.object({
+  schema: ({ image }) => {
+    const imageSource = z.union([image(), z.url()]);
+
+    return z.object({
       date: z.date().refine((date) => !Number.isNaN(date.getTime()), {
         message: "Invalid date format",
       }),
-      images: z.array(z.union([z.string(), image()])).optional(),
-    }),
+      images: z.array(imageSource).optional(),
+    });
+  },
 });
 
 export const collections = {

@@ -1,11 +1,12 @@
 ---
 import type { ImageMetadata } from 'astro'
+import type { ImageSource } from "@/toolkit/images/imageSource";
 import CoverImage from './CoverImage.astro'
 
 interface Props {
   enable?: boolean
   preload?: boolean
-  fixedCover?: ImageMetadata | string
+  fixedCover?: ImageSource
   gradient?: boolean
   covers?: ImageMetadata[]
   title?: string

@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { currentLocale, t } from "@/i18n";
+import SmartImage from "./SmartImage.astro";
+import { isImageSource } from "@/toolkit/images/imageSource";
 
 interface Props {
   moment: CollectionEntry<"moments">;
@@ -19,22 +21,8 @@ function formatDate(date: Date): string {
   });
 }
 
-// 解析图片路径
-function resolveImageSrc(image: unknown): string | undefined {
-  if (typeof image === "string") {
-    return image;
-  }
-  // 如果是 Astro 的 Image 类型，返回 src
-  if (image && typeof image === "object" && "src" in image) {
-    return (image as { src: string }).src;
-  }
-  return undefined;
-}
-
 const images =
-  moment.data.images
-    ?.map(resolveImageSrc)
-    .filter((src): src is string => Boolean(src)) || [];
+  moment.data.images?.filter((image) => isImageSource(image)) || [];
 const content = moment.body || "";
 ---
 
@@ -57,7 +45,7 @@ const content = moment.body || "";
           {images.map((src, index) => (
             <div class="image-wrapper bg-grey-2">
               <image-zoom>
-                <img
+                <SmartImage
                   src={src}
                   alt={t("moments.imageAlt", { index: index + 1 })}
                   loading="lazy"

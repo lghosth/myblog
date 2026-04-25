@@ -1,7 +1,7 @@
 ---
-import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import { getT } from "@/i18n";
+import SmartImage from "./SmartImage.astro";
 
 interface Props {
   post: CollectionEntry<"posts">;
@@ -19,7 +19,7 @@ const lastCategory = post.data.categories?.[post.data.categories.length - 1];
   <div class="cover">
     {
       post.data.cover && (
-        <Image
+        <SmartImage
           layout="constrained"
           src={post.data.cover}
           alt={post.data.title}

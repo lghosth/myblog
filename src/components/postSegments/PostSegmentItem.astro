@@ -1,14 +1,14 @@
 ---
-import { Image } from "astro:assets";
 import PostMeta from "./PostMeta.astro";
-import type { ImageMetadata } from "astro";
+import SmartImage from "@/components/SmartImage.astro";
+import type { ImageSource } from "@/toolkit/images/imageSource";
 
 export interface Props {
   title: string;
   url: string;
   date: Date;
   excerpt: string;
-  cover?: ImageMetadata;
+  cover?: ImageSource;
   category?: string;
   categoryUrl?: string;
   isEven?: boolean;
@@ -37,7 +37,7 @@ const {
     {
       cover ? (
         <a href={url} title={title}>
-          <Image
+          <SmartImage
             src={cover}
             widths={[320, 400, 480, 640, 800, 960]}
             sizes="(min-width: 768px) 480px, 90vw"

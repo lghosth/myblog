@@ -22,6 +22,7 @@ import { countWords, calculateReadingMinutes } from "@/toolkit/posts/calculateSt
 import { toPostHref, toTagHref } from "@/toolkit/posts/url";
 import { wrapRenderedCodeBlocks } from "@/toolkit/wrapRenderedCodeBlocks";
 import { wrapRenderedImages } from "@/toolkit/wrapRenderedImages";
+import { resolveImageSrc } from "@/toolkit/images/imageSource";
 
 import "@/styles/post.css";
 
@@ -107,10 +108,7 @@ export async function getStaticPaths() {
                 title: prevPost.data.title,
                 slug: prevPost.id,
                 category: prevPost.data.categories?.[0],
-                cover:
-                  typeof prevPost.data.cover === "string"
-                    ? prevPost.data.cover
-                    : prevPost.data.cover?.src,
+                cover: resolveImageSrc(prevPost.data.cover),
               }
             : undefined,
           nextPost: nextPost
@@ -118,10 +116,7 @@ export async function getStaticPaths() {
                 title: nextPost.data.title,
                 slug: nextPost.id,
                 category: nextPost.data.categories?.[0],
-                cover:
-                  typeof nextPost.data.cover === "string"
-                    ? nextPost.data.cover
-                    : nextPost.data.cover?.src,
+                cover: resolveImageSrc(nextPost.data.cover),
               }
             : undefined,
           relatedPosts,

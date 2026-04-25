@@ -1,5 +1,5 @@
-import type { ImageMetadata } from "astro";
 import type { CollectionEntry } from "astro:content";
+import type { ImageSource } from "@/toolkit/images/imageSource";
 import { calculateReadingMinutes, countWords, DEFAULT_WORDS_PER_MINUTE } from "./calculateStats";
 import { toCategoryHref, toPostHref } from "./url";
 
@@ -10,7 +10,7 @@ export interface TransformedIndexPost {
   url: string;
   date: Date;
   excerpt: string;
-  cover?: ImageMetadata;
+  cover?: ImageSource;
   category?: string;
   categoryUrl?: string;
   wordCount: number;
@@ -21,7 +21,7 @@ export interface TransformIndexPostsOptions {
   encryptedExcerpt: string;
   excerptLength?: number;
   wordsPerMinute?: number;
-  resolveCover?: (post: CollectionEntry<"posts">) => ImageMetadata | undefined;
+  resolveCover?: (post: CollectionEntry<"posts">) => ImageSource | undefined;
 }
 
 export function calculateReadTime(
